@@ -1,7 +1,7 @@
-import { Button, Card, Flex, Typography } from 'antd'
+import { Button, Flex, Typography } from 'antd'
 import { Link } from 'react-router-dom'
-import { AppRoutes } from '../../../../app/app-routes'
 import { ExclamationCircleOutlined, HomeOutlined } from '@ant-design/icons'
+import { AppRoutes } from '@app/app-routes'
 
 const NotFound = () => {
   return (

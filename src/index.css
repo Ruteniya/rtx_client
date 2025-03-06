@@ -2,12 +2,17 @@
 
 @layer base {
   :root {
+    --colorPrimary: #1772bd;
+    --colorSecondary: #ebf6ff;
+    --colorSecondaryDark: #c5d4e1;
+
     --colorSuccess: #12b76a;
     --colorWarning: #f79009;
     --colorError: #f04438;
     --colorTextBase: #101828;
     --colorBorder: #d9d9d9;
     --grayText: #475467;
+    --background: #eef1f0;
   }
 }
 
@@ -58,4 +63,8 @@ textarea,
 button,
 label {
   font-family: 'Inter', 'Open Sans', sans-serif;
+}
+
+.ant-layout-sider-zero-width-trigger {
+  top: 5px !important;
 }

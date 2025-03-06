@@ -15,14 +15,15 @@
     "@rtx/types": "../rtx_packages",
     "@tailwindcss/vite": "^4.0.10",
     "antd": "^5.24.3",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "18",
+    "react-dom": "18",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.2.0",
     "tailwindcss": "^4.0.10"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@types/node": "^22.13.9",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",

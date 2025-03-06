@@ -4,6 +4,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        secondaryDark: 'var(--colorSecondaryDark)',
+
         success: 'var(--colorSuccess)',
         warning: 'var(--colorWarning)',
         error: 'var(--colorError)',
