@@ -31,7 +31,7 @@ const ManageGroupsMenu = () => {
   const menuItems: MenuProps['items'] = [
     {
       key: 'add',
-      label: 'Додати групу',
+      label: 'Додати команду',
       onClick: () => setIsModalOpen(true)
     }
   ]
@@ -39,7 +39,7 @@ const ManageGroupsMenu = () => {
   return (
     <>
       <div className="flex justify-between mb-4">
-        <Typography.Title>Групи</Typography.Title>
+        <Typography.Title>Команди</Typography.Title>
         <Dropdown menu={{ items: menuItems }}>
           <Button icon={<DownOutlined />}>Керування</Button>
         </Dropdown>
@@ -53,7 +53,7 @@ const ManageGroupsMenu = () => {
         confirmLoading={isCreating}
       >
         <Form form={form} layout="vertical">
-          <Form.Item name="name" label="Назва групи" rules={[{ required: true, message: 'Введіть назву групи' }]}>
+          <Form.Item name="name" label="Назва команди" rules={[{ required: true, message: 'Введіть назву команди' }]}>
             <Input />
           </Form.Item>
           <Form.Item

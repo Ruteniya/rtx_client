@@ -16,8 +16,8 @@ const ManageCategoriesMenu = () => {
 
   return (
     <>
-      <div className="flex justify-between mb-4">
-        <Typography.Title>Категорії</Typography.Title>
+      <div className="flex justify-between mb-4 flex-wrap">
+        <Typography.Title level={2}>Категорії</Typography.Title>
         <Dropdown menu={{ items: menuItems }}>
           <Button icon={<DownOutlined />}>Керування</Button>
         </Dropdown>

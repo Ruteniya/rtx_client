@@ -17,12 +17,9 @@ const CategoriesTable = () => {
     Modal.confirm({
       title: 'Видалити категорію?',
       onOk: async () => {
-        try {
-          await deleteCategory(id)
-          message.success('Категорію видалено')
-        } catch (error) {
-          message.error('Помилка при видаленні категорії')
-        }
+        await deleteCategory(id)
+          .then(message.success('Категорію видалено'))
+          .catch(message.error('Помилка при видаленні категорії'))
       }
     })
   }
@@ -80,7 +77,7 @@ const CategoriesTable = () => {
   return (
     <>
       <Table
-        className="!max-w-[850px] min-w-[80%]"
+        className="!max-w-[850px] min-w-fit md:min-w-[80%]"
         dataSource={categories || []}
         columns={columns}
         rowKey="id"

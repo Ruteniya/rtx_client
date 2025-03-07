@@ -52,7 +52,7 @@ const ManageCategoryModal = ({
         onOk={handleSubmit}
         confirmLoading={isCreating || isUpdating}
       >
-        <Form key={categoryData ? categoryData.id : 'create'} form={form} layout="vertical">
+        <Form key={categoryData ? categoryData.id : 'create'} form={form} layout="vertical" requiredMark>
           <Form.Item
             name="name"
             label="Назва категорії"
@@ -69,7 +69,7 @@ const ManageCategoryModal = ({
             initialValue="#ffffff"
             rules={[{ required: true, message: 'Введіть колір категорії' }]}
           >
-            <Input type="color" />
+            <Input type="color" className="!w-full" />
           </Form.Item>
         </Form>
       </Modal>

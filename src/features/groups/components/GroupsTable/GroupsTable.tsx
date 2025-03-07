@@ -10,7 +10,7 @@ const GroupsTable = () => {
 
   const columns = [
     {
-      title: 'Назва групи',
+      title: 'Назва команди',
       dataIndex: 'name',
       key: 'name'
     },
@@ -33,7 +33,7 @@ const GroupsTable = () => {
 
   return (
     <Table
-      className="!max-w-[850px] min-w-[80%]"
+      className="!max-w-[850px] min-w-fit md:min-w-[80%]"
       dataSource={groups || []}
       columns={columns}
       rowKey="id"

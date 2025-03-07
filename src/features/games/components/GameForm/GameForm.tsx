@@ -1,7 +1,7 @@
 import React from 'react'
 import { Form, Input, DatePicker, Button, message, Upload } from 'antd'
 import { Pto } from '@rtx/types'
-import { UploadChangeParam, UploadFile } from 'antd/es/upload/interface'
+import { UploadChangeParam } from 'antd/es/upload/interface'
 import { UploadOutlined } from '@ant-design/icons'
 import { useCreateGameMutation, useUpdateGameMutation } from '@api/api-games'
 import dayjs from '@utils/dayjs-config'
@@ -23,7 +23,6 @@ const GameForm: React.FC<GameFormProps> = ({ isEditMode, initialValues, onSucces
   const handleUploadChange = (info: UploadChangeParam) => {
     if (info.file.status !== 'uploading') {
       setTimeout(() => {
-        console.log('info?.file["thumbUrl"] ', info?.file?.thumbUrl)
         setLogo(info?.file?.thumbUrl)
       }, 1000)
     }
@@ -38,18 +37,14 @@ const GameForm: React.FC<GameFormProps> = ({ isEditMode, initialValues, onSucces
       endDate: values.endDate.toISOString()
     }
 
-    try {
-      if (isEditMode) {
-        await updateGame({ id: initialValues?.id || '', updateGameDto: gameData })
+    if (isEditMode) {
+      await updateGame({ id: initialValues?.id || '', updateGameDto: gameData }).then(
         message.success('Гра оновлена успішно')
-      } else {
-        await createGame(gameData)
-        message.success('Гру створено успішно')
-      }
-      onSuccess()
-    } catch (error) {
-      message.error('Помилка при збереженні гри')
+      )
+    } else {
+      await createGame(gameData).then(message.success('Гру створено успішно'))
     }
+    onSuccess()
   }
 
   return (
@@ -59,6 +54,7 @@ const GameForm: React.FC<GameFormProps> = ({ isEditMode, initialValues, onSucces
       onFinish={handleSubmit}
       initialValues={{
         ...initialValues,
+        logo: { fileList: [logo] },
         startDate: initialValues?.startDate ? dayjs(new Date(initialValues.startDate)) : undefined,
         endDate: initialValues?.endDate ? dayjs(new Date(initialValues.endDate)) : undefined
       }}
@@ -76,7 +72,7 @@ const GameForm: React.FC<GameFormProps> = ({ isEditMode, initialValues, onSucces
         </Upload>
       </Form.Item>
       <Form.Item name="description" label="Опис" rules={[{ required: true, message: 'Введіть опис гри' }]}>
-        <Input />
+        <Input.TextArea />
       </Form.Item>
       <Form.Item
         name="startDate"

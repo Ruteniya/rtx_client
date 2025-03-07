@@ -52,17 +52,17 @@ const router = createBrowserRouter([
 ])
 function App() {
   return (
-    <ThemeProvider>
-      <Suspense
-        fallback={
-          <Flex className="w-screen h-dvh lg:h-screen" justify="center" align="center">
-            <Spin spinning={true} size="large" />
-          </Flex>
-        }
-      >
-        <RouterProvider router={router} />
-      </Suspense>
-    </ThemeProvider>
+    // <ThemeProvider>
+    <Suspense
+      fallback={
+        <Flex className="w-screen h-dvh lg:h-screen" justify="center" align="center">
+          <Spin spinning={true} size="large" />
+        </Flex>
+      }
+    >
+      <RouterProvider router={router} />
+    </Suspense>
+    // </ThemeProvider>
   )
 }
 

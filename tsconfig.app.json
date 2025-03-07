@@ -28,6 +28,11 @@
       "@features/*": ["features/*"],
       "@utils/*": ["utils/*"],
       "@hooks/*": ["hooks/*"]
-    }
-  }
+    },
+
+    "outDir": "./dist",
+    "declaration": true,
+    "emitDeclarationOnly": false
+  },
+  "include": ["src"]
 }
