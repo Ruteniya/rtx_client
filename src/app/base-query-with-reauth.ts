@@ -1,14 +1,9 @@
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { settings } from './settings'
 
 const baseQueryWithReauth = fetchBaseQuery({
-  baseUrl: 'http://localhost:4496/',
-  prepareHeaders: (headers, {}) => {
-    const token = 'dfgdfg'
-    if (token) {
-      headers.set('Authorization', `Bearer ${token}`)
-    }
-    return headers
-  }
+  baseUrl: settings.backendUrl,
+  credentials: 'include'
 })
 
 export { baseQueryWithReauth }

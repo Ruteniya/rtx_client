@@ -1,4 +1,7 @@
 @import 'tailwindcss';
+/* @layer theme, base, components, utilities;
+@theme static */
+/* @import 'tailwindcss/preflight'; */
 
 @layer base {
   :root {
@@ -13,6 +16,12 @@
     --colorBorder: #d9d9d9;
     --grayText: #475467;
     --background: #eef1f0;
+  }
+}
+
+@layer utilities {
+  .bg-secondary {
+    background-color: var(--colorSecondary);
   }
 }
 
@@ -67,4 +76,8 @@ label {
 
 .ant-layout-sider-zero-width-trigger {
   top: 5px !important;
+}
+
+.ant-drawer-body {
+  padding: 0 !important;
 }

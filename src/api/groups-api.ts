@@ -12,10 +12,17 @@ export const groupsApi = apiSlice.injectEndpoints({
       },
       providesTags: ['Groups']
     }),
+    getGroup: builder.query<Pto.Groups.Group, string>({
+      query: (id) => {
+        return {
+          url: `groups/${id}`,
+          method: 'GET'
+        }
+      },
+      providesTags: ['Groups']
+    }),
     createGroup: builder.mutation<Pto.Groups.Group, Pto.Groups.CreateGroup>({
       query: (data) => {
-        console.log('typeof data', typeof data.numberOfParticipants)
-        console.log(data)
         return {
           url: `groups`,
           method: 'POST',
@@ -23,8 +30,30 @@ export const groupsApi = apiSlice.injectEndpoints({
         }
       },
       invalidatesTags: ['Groups']
+    }),
+    updateGroup: builder.mutation<Pto.Groups.Group, { id: string; data: Pto.Groups.UpdateGroup }>({
+      query: ({ id, data }) => ({
+        url: `groups/${id}`,
+        method: 'PATCH',
+        body: data
+      }),
+      invalidatesTags: ['Groups']
+    }),
+    deleteGroup: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `groups/${id}`,
+        method: 'DELETE'
+      }),
+      invalidatesTags: ['Groups']
     })
   })
 })
 
-export const { useGetGroupsQuery, useCreateGroupMutation } = groupsApi
+export const {
+  useGetGroupsQuery,
+  useGetGroupQuery,
+  useLazyGetGroupQuery,
+  useCreateGroupMutation,
+  useUpdateGroupMutation,
+  useDeleteGroupMutation
+} = groupsApi

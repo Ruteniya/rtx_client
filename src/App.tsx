@@ -2,7 +2,7 @@ import { Flex, Spin } from 'antd'
 import { AppRoutes } from '@app/app-routes'
 import { lazy, Suspense } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { ThemeProvider } from '@features/system/components'
+// import { ThemeProvider } from '@features/system/components'
 
 //system
 const HomePage = lazy(() => import('@features/system/pages/Home'))
@@ -10,7 +10,12 @@ const AboutPage = lazy(() => import('@features/system/pages/About'))
 const NotFound = lazy(() => import('@features/system/pages/NotFound'))
 const ErrorPage = lazy(() => import('@features/system/pages/Error'))
 
-const DataRoute = lazy(() => import('./features/system/components/DataRoute'))
+const DataRoute = lazy(() => import('@features/system/components/DataRoute'))
+
+//login
+const Login = lazy(() => import('@features/auth/pages/Login'))
+
+const AuthProtectedComponent = lazy(() => import('@services/auth.service'))
 
 //admin pages
 const AdminLayout = lazy(() => import('@features/layout/admin'))
@@ -20,17 +25,21 @@ const Game = lazy(() => import('@features/games/pages/Game'))
 
 const router = createBrowserRouter([
   {
-    path: AppRoutes.main,
-    element: <HomePage />
-  },
-  {
-    path: AppRoutes.main,
-    element: <AboutPage />
-  },
-  {
     element: <DataRoute />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: AppRoutes.main,
+        element: <AuthProtectedComponent />
+      },
+      {
+        path: AppRoutes.about,
+        element: <AboutPage />
+      },
+      {
+        path: AppRoutes.login,
+        element: <Login />
+      },
       {
         element: <AdminLayout children={<Groups />} />,
         path: AppRoutes.groups

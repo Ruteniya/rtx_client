@@ -5,6 +5,7 @@ import { UploadChangeParam } from 'antd/es/upload/interface'
 import { UploadOutlined } from '@ant-design/icons'
 import { useCreateGameMutation, useUpdateGameMutation } from '@api/api-games'
 import dayjs from '@utils/dayjs-config'
+import GameLogo from '../GameLogo'
 
 interface GameFormProps {
   isEditMode: boolean
@@ -38,11 +39,11 @@ const GameForm: React.FC<GameFormProps> = ({ isEditMode, initialValues, onSucces
     }
 
     if (isEditMode) {
-      await updateGame({ id: initialValues?.id || '', updateGameDto: gameData }).then(
-        message.success('Гра оновлена успішно')
-      )
+      await updateGame({ id: initialValues?.id || '', updateGameDto: gameData })
+        .unwrap()
+        .then(message.success('Гра оновлена успішно'))
     } else {
-      await createGame(gameData).then(message.success('Гру створено успішно'))
+      await createGame(gameData).unwrap().then(message.success('Гру створено успішно'))
     }
     onSuccess()
   }
@@ -64,14 +65,10 @@ const GameForm: React.FC<GameFormProps> = ({ isEditMode, initialValues, onSucces
       </Form.Item>
       <Form.Item name="logo" label="Логотип" rules={[{ required: true, message: 'Введіть логотип гри' }]}>
         <Upload listType="picture" onChange={handleUploadChange} maxCount={1}>
-          {logo ? (
-            <img src={logo} alt="Логотип" style={{ width: '100px', height: '100px' }} />
-          ) : (
-            <Button icon={<UploadOutlined />}>Завантажити логотип</Button>
-          )}
+          {logo ? <GameLogo logo={logo || ''} /> : <Button icon={<UploadOutlined />}>Завантажити логотип</Button>}
         </Upload>
       </Form.Item>
-      <Form.Item name="description" label="Опис" rules={[{ required: true, message: 'Введіть опис гри' }]}>
+      <Form.Item name="description" label="Опис">
         <Input.TextArea />
       </Form.Item>
       <Form.Item

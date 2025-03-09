@@ -7,7 +7,10 @@ import path from 'node:path'
 export default defineConfig({
   resolve: {
     alias: Object.fromEntries(
-      ['api', 'app', 'features', 'utils', 'hooks'].map((dir) => [`@${dir}`, path.resolve(__dirname, `./src/${dir}`)])
+      ['api', 'app', 'features', 'hooks', 'utils', 'services'].map((dir) => [
+        `@${dir}`,
+        path.resolve(__dirname, `./src/${dir}`)
+      ])
     )
   },
   plugins: [react(), tailwindcss()]

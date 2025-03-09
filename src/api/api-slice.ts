@@ -5,5 +5,5 @@ export const apiSlice = createApi({
   reducerPath: '',
   baseQuery: baseQueryWithReauth,
   endpoints: () => ({}),
-  tagTypes: ['Groups', 'Game', 'Categories']
+  tagTypes: ['Groups', 'Game', 'Categories', 'CurrentUser']
 })

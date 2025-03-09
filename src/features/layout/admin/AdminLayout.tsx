@@ -40,13 +40,31 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       {/* Кнопка для відкриття меню на малих екранах */}
-      <div className="lg:hidden fixed top-3 left-3 z-50">
-        <Button type="primary" icon={<MenuOutlined />} onClick={() => setCollapsed(false)} className="h-14" />
+      <div className="lg:hidden fixed top-2 left-2 z-50">
+        <Button
+          type="primary"
+          icon={<MenuOutlined />}
+          className="h-14 !bg-blue-950"
+          onClick={() => setCollapsed(false)}
+        />
       </div>
 
       {/* Drawer для мобільного меню */}
-      <Drawer open={!collapsed} onClose={() => setCollapsed(true)} placement="left" closable width={250}>
-        <Menu selectedKeys={[location.pathname]} mode="inline" items={menuItems} className="bg-gray-50" />
+      <Drawer
+        open={!collapsed}
+        onClose={() => setCollapsed(true)}
+        onClick={() => setCollapsed(true)}
+        placement="left"
+        closable
+        width={200}
+      >
+        <Menu
+          selectedKeys={[location.pathname]}
+          mode="inline"
+          items={menuItems}
+          className="bg-gray-50"
+          style={{ height: '100%' }}
+        />
       </Drawer>
 
       {/* Бокова панель для великих екранів */}

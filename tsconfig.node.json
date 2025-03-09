@@ -18,7 +18,9 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
-    "composite": true
-  }
-  // "include": ["vite.config.js"]
+    "composite": true,
+
+    "outDir": "./dist"
+  },
+  "include": ["vite.config.ts"]
 }

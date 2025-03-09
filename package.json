@@ -12,7 +12,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
     "@reduxjs/toolkit": "^2.6.0",
-    "@rtx/types": "../rtx_packages",
+    "@rtx/types": "../RtX_Packages",
     "@tailwindcss/vite": "^4.0.10",
     "antd": "^5.24.3",
     "react": "18",
