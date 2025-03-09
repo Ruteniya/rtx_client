@@ -1,9 +1,9 @@
 import React from 'react'
-import { Card, Button, Typography, Flex } from 'antd'
+import { Card, Button } from 'antd'
 import { Pto } from '@rtx/types'
 import { useState } from 'react'
 import GameForm from '../GameForm'
-import GameLogo from '../GameLogo'
+import GameInfo from '../GameInfo'
 
 interface GameDetailsProps {
   game: Pto.Games.Game
@@ -20,17 +20,7 @@ const GameDetails: React.FC<GameDetailsProps> = ({ game }) => {
           <Button onClick={() => setIsEditMode(!isEditMode)}>{isEditMode ? 'Згорнути форму' : 'Редагувати'}</Button>
         }
       >
-        {isEditMode ? (
-          '...'
-        ) : (
-          <Flex vertical justify="center" align="center" className="text-center items-center">
-            <GameLogo logo={game?.logo || ''} />
-            <Typography.Title>{game.name}</Typography.Title>
-            <Typography.Paragraph>{game.description}</Typography.Paragraph>
-            <strong>Дата початку:</strong> {new Date(game.startDate).toLocaleString()}
-            <strong>Дата закінчення:</strong> {new Date(game.endDate).toLocaleString()}
-          </Flex>
-        )}
+        {isEditMode ? '...' : <GameInfo game={game} />}
       </Card>
       {isEditMode && <GameForm isEditMode={true} initialValues={game} onSuccess={() => setIsEditMode(false)} />}
     </div>

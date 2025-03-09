@@ -1,10 +1,19 @@
 import { useGetGameQuery } from '@api/api-games'
 import { Flex, Spin } from 'antd'
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
+import { setGame } from '@app/user-slice'
+import { useAppDispatch } from '@hooks/useDispatch'
 
 const DataRoute = () => {
+  const dispatch = useAppDispatch()
   const { data, isLoading } = useGetGameQuery()
+
+  useEffect(() => {
+    if (data) {
+      dispatch(setGame(data))
+    }
+  }, [data, dispatch])
 
   if (isLoading) {
     return (
@@ -22,7 +31,7 @@ const DataRoute = () => {
         </Flex>
       }
     >
-      <Outlet context={{ game: data, role: undefined }} />
+      <Outlet />
     </Suspense>
   )
 }

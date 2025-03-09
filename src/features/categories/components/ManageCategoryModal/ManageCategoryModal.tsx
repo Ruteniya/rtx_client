@@ -23,7 +23,7 @@ const ManageCategoryModal = ({
     } else {
       form.resetFields()
     }
-  }, [categoryData])
+  }, [categoryData, form])
 
   const handleSubmit = async () => {
     try {

@@ -46,7 +46,7 @@ const CategoriesTable = () => {
     {
       title: 'Дії',
       key: 'actions',
-      render: (_: any, record: Pto.Categories.Category) => (
+      render: (_: unknown, record: Pto.Categories.Category) => (
         <Dropdown
           menu={{
             items: [

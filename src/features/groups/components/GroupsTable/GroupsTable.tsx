@@ -52,7 +52,7 @@ const GroupsTable = () => {
     {
       title: 'Дії',
       key: 'actions',
-      render: (_: any, record: Pto.Groups.Group) => (
+      render: (_: unknown, record: Pto.Groups.Group) => (
         <Dropdown
           menu={{
             items: [

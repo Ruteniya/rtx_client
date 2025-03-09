@@ -2,10 +2,11 @@ import { Flex, Spin } from 'antd'
 import { AppRoutes } from '@app/app-routes'
 import { lazy, Suspense } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { Pto } from '@rtx/types'
 // import { ThemeProvider } from '@features/system/components'
 
 //system
-const HomePage = lazy(() => import('@features/system/pages/Home'))
+// const HomePage = lazy(() => import('@features/system/pages/Home'))
 const AboutPage = lazy(() => import('@features/system/pages/About'))
 const NotFound = lazy(() => import('@features/system/pages/NotFound'))
 const ErrorPage = lazy(() => import('@features/system/pages/Error'))
@@ -15,7 +16,8 @@ const DataRoute = lazy(() => import('@features/system/components/DataRoute'))
 //login
 const Login = lazy(() => import('@features/auth/pages/Login'))
 
-const AuthProtectedComponent = lazy(() => import('@services/auth.service'))
+const AuthComponent = lazy(() => import('@features/auth/components/AuthComponent'))
+const ProtectedRoute = lazy(() => import('@features/auth/components/ProtectedRoute'))
 
 //admin pages
 const AdminLayout = lazy(() => import('@features/layout/admin'))
@@ -30,27 +32,32 @@ const router = createBrowserRouter([
     children: [
       {
         path: AppRoutes.main,
-        element: <AuthProtectedComponent />
-      },
-      {
-        path: AppRoutes.about,
-        element: <AboutPage />
+        element: <AuthComponent />
       },
       {
         path: AppRoutes.login,
         element: <Login />
       },
       {
-        element: <AdminLayout children={<Groups />} />,
-        path: AppRoutes.groups
+        element: <ProtectedRoute allowedRoles={[Pto.Users.UserRole.Admin, Pto.Users.UserRole.SystemAdmin]} />,
+        children: [
+          {
+            element: <AdminLayout children={<Groups />} />,
+            path: AppRoutes.groups
+          },
+          {
+            element: <AdminLayout children={<Categories />} />,
+            path: AppRoutes.categories
+          },
+          {
+            element: <AdminLayout children={<Game />} />,
+            path: AppRoutes.game
+          }
+        ]
       },
       {
-        element: <AdminLayout children={<Categories />} />,
-        path: AppRoutes.categories
-      },
-      {
-        element: <AdminLayout children={<Game />} />,
-        path: AppRoutes.game
+        element: <ProtectedRoute />,
+        children: [{ element: <AboutPage />, path: AppRoutes.about }]
       }
     ]
   },

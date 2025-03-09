@@ -9,7 +9,7 @@ const LoginButton: React.FC = () => {
   }
 
   return (
-    <Button type="primary" icon={<GoogleOutlined />} className="!rounded-2xl bg-red-400 min-h-10" onClick={handleLogin}>
+    <Button type="primary" icon={<GoogleOutlined />} className="!rounded-xl min-h-10 mt-5" onClick={handleLogin}>
       Продовжити через Google
     </Button>
   )

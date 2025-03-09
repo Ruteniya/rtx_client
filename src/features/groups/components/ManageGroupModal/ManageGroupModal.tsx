@@ -27,7 +27,7 @@ const ManageGroupsModal = ({
     } else {
       form.resetFields()
     }
-  }, [groupData])
+  }, [groupData, form])
 
   const handleSubmit = async () => {
     try {

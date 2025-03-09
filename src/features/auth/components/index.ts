@@ -1,3 +1,5 @@
+export { default as AuthComponent } from './AuthComponent'
 export { default as LoginButton } from './LoginButton'
 export { default as GroupSelector } from './GroupSelector'
 export { default as GroupInfo } from './GroupInfo'
+export { default as ProtectedRoute } from './ProtectedRoute'

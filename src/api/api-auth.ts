@@ -3,20 +3,12 @@ import { Pto } from '@rtx/types'
 
 export const authApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    addToGroup: builder.mutation<Pto.Users.User, { userId: string; groupId: string }>({
-      query: ({ userId, groupId }) => ({
-        url: `auth/group/login/${userId}`,
-        method: 'POST',
-        params: { groupId }
+    addToGroup: builder.mutation<Pto.Users.User, { groupId: string }>({
+      query: ({ groupId }) => ({
+        url: `auth/group/login/${groupId}`,
+        method: 'POST'
       }),
       invalidatesTags: ['CurrentUser']
-    }),
-    getCurrentUser: builder.query<Pto.Users.User, void>({
-      query: () => ({
-        url: 'auth/me',
-        method: 'GET'
-      }),
-      providesTags: ['CurrentUser']
     }),
     logout: builder.mutation<void, void>({
       query: () => ({
@@ -28,4 +20,4 @@ export const authApi = apiSlice.injectEndpoints({
   })
 })
 
-export const { useAddToGroupMutation, useGetCurrentUserQuery, useLogoutMutation } = authApi
+export const { useAddToGroupMutation, useLogoutMutation } = authApi

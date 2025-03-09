@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Layout, Menu, Drawer, Button } from 'antd'
-import { Link, useLocation, useOutletContext } from 'react-router-dom'
+import { Layout, Menu, Drawer, Button, Flex } from 'antd'
+import { Link, useLocation } from 'react-router-dom'
 import { AppRoutes } from '@app/app-routes'
 import {
   CheckCircleOutlined,
@@ -10,13 +10,14 @@ import {
   UsergroupDeleteOutlined
 } from '@ant-design/icons'
 import { ItemType, MenuItemType } from 'antd/es/menu/interface'
-import { Pto } from '@rtx/types'
+import { useAppSelector } from '@hooks/useSelector'
+import LogoutButton from '@features/auth/components/LogoutButton/LogoutButton'
 
 const { Sider, Content } = Layout
 
 const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation()
-  const { game } = useOutletContext<{ game?: Pto.Games.Game }>()
+  const game = useAppSelector((state) => state.user.game)
   const [collapsed, setCollapsed] = useState(true)
 
   const menuItems: ItemType<MenuItemType>[] = [
@@ -36,6 +37,15 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       label: <Link to={AppRoutes.categories}>Категорії</Link>
     }
   ]
+
+  const MenuWraper: React.FC = () => (
+    <Flex vertical justify="space-between" className="h-full bg-white">
+      <Menu selectedKeys={[location.pathname]} mode="inline" items={menuItems} style={{ height: '100%' }} />
+      <Flex className="max-w-[200px] !m-2" justify="center">
+        <LogoutButton />
+      </Flex>
+    </Flex>
+  )
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -58,24 +68,12 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         closable
         width={200}
       >
-        <Menu
-          selectedKeys={[location.pathname]}
-          mode="inline"
-          items={menuItems}
-          className="bg-gray-50"
-          style={{ height: '100%' }}
-        />
+        <MenuWraper />
       </Drawer>
 
       {/* Бокова панель для великих екранів */}
-      <Sider breakpoint="lg" collapsedWidth="0" className="hidden lg:block">
-        <Menu
-          selectedKeys={[location.pathname]}
-          mode="inline"
-          items={menuItems}
-          style={{ height: '100%' }}
-          className="!shadow-lg bg-gray-50"
-        />
+      <Sider breakpoint="lg" collapsedWidth="0" className="hidden lg:block bg-transparent">
+        <MenuWraper />
       </Sider>
 
       <Layout style={{ padding: '0 24px 24px' }}>
