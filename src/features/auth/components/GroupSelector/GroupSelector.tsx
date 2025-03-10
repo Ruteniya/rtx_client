@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Input, Button, Typography, Space, Divider } from 'antd'
+import { Input, Button, Typography, Space, Divider, message } from 'antd'
 import { useLazyGetGroupQuery } from '@api/groups-api'
 import { Pto } from '@rtx/types'
 import GroupService from '@services/group.service'
+import { validate as validateUuid } from 'uuid'
 
 const { Text } = Typography
 
@@ -12,8 +13,9 @@ interface GroupSelectorProps {
 
 const GroupSelector: React.FC<GroupSelectorProps> = ({ setGroup }) => {
   const [groupId, setGroupId] = useState('')
+  const [isError, setIsError] = useState(false)
 
-  const [triggerGetGroup, { isLoading, isError }] = useLazyGetGroupQuery()
+  const [triggerGetGroup, { isLoading, isError: getGroupError }] = useLazyGetGroupQuery()
 
   const [existingGroup, setExistingGroup] = useState<Pto.Groups.Group>()
   const existingGroupId = GroupService.getGroupId()
@@ -39,6 +41,12 @@ const GroupSelector: React.FC<GroupSelectorProps> = ({ setGroup }) => {
   }
 
   const handleNextStep = async () => {
+    if (!validateUuid(groupId)) {
+      setIsError(true)
+      message.error('Код невалідний')
+      return
+    } else setIsError(false)
+
     const result = await triggerGetGroup(groupId)
       .unwrap()
       .catch(() => null)
@@ -52,7 +60,7 @@ const GroupSelector: React.FC<GroupSelectorProps> = ({ setGroup }) => {
     <Space direction="vertical" className="w-full">
       <Text>Введи код команди, який тобі надіслали організатори:</Text>
       <Input
-        className={`${isError ? '!border-red-400' : ''}`}
+        className={`${isError || getGroupError ? '!border-red-400' : ''}`}
         placeholder="Код групи"
         value={groupId}
         onChange={(e) => setGroupId(e.target.value)}

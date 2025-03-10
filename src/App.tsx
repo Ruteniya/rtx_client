@@ -25,6 +25,10 @@ const Groups = lazy(() => import('@features/groups/pages/Groups'))
 const Categories = lazy(() => import('@features/categories/pages/Categories'))
 const Game = lazy(() => import('@features/games/pages/Game'))
 
+//user pages
+const UserLayout = lazy(() => import('@features/layout/users'))
+const CurrentGroup = lazy(() => import('@features/groups/pages/CurrentGroup'))
+
 const router = createBrowserRouter([
   {
     element: <DataRoute />,
@@ -57,7 +61,16 @@ const router = createBrowserRouter([
       },
       {
         element: <ProtectedRoute />,
-        children: [{ element: <AboutPage />, path: AppRoutes.about }]
+        children: [
+          {
+            element: <UserLayout children={<AboutPage />} />,
+            path: AppRoutes.about
+          },
+          {
+            element: <UserLayout children={<CurrentGroup />} />,
+            path: AppRoutes.currentGroup
+          }
+        ]
       }
     ]
   },

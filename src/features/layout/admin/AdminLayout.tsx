@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Layout, Menu, Drawer, Button, Flex } from 'antd'
+import { Layout, Menu, Drawer, Button, Flex, Typography, Divider } from 'antd'
 import { Link, useLocation } from 'react-router-dom'
 import { AppRoutes } from '@app/app-routes'
 import {
@@ -24,7 +24,11 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     {
       key: AppRoutes.game,
       icon: game?.id ? <CheckCircleOutlined /> : <ExclamationCircleFilled />,
-      label: <Link to={AppRoutes.game}>{game?.name || 'Гра (не обрана)'}</Link>
+      label: (
+        <Link to={AppRoutes.game} className="!font-semibold">
+          {game?.name || 'Гра (не обрана)'}
+        </Link>
+      )
     },
     {
       key: AppRoutes.groups,
@@ -40,9 +44,16 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   const MenuWraper: React.FC = () => (
     <Flex vertical justify="space-between" className="h-full bg-white">
-      <Menu selectedKeys={[location.pathname]} mode="inline" items={menuItems} style={{ height: '100%' }} />
-      <Flex className="max-w-[200px] !m-2" justify="center">
-        <LogoutButton />
+      <Menu
+        selectedKeys={[location.pathname]}
+        className="!mt-2"
+        mode="inline"
+        items={menuItems}
+        style={{ height: '100%' }}
+      />
+
+      <Flex className="max-w-[200px] !m-2" justify="center" onClick={(e) => e.stopPropagation()}>
+        <LogoutButton className="!z-2000" />
       </Flex>
     </Flex>
   )
