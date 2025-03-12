@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { Layout, Menu, Drawer, Button, Flex, Typography, Divider } from 'antd'
+import { Layout, Menu, Drawer, Button, Flex } from 'antd'
 import { Link, useLocation } from 'react-router-dom'
 import { AppRoutes } from '@app/app-routes'
 import {
   CheckCircleOutlined,
   ExclamationCircleFilled,
   MenuOutlined,
+  NodeIndexOutlined,
   TagOutlined,
   UsergroupDeleteOutlined
 } from '@ant-design/icons'
@@ -39,6 +40,11 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       key: AppRoutes.categories,
       icon: <TagOutlined />,
       label: <Link to={AppRoutes.categories}>Категорії</Link>
+    },
+    {
+      key: AppRoutes.nodes,
+      icon: <NodeIndexOutlined />,
+      label: <Link to={AppRoutes.nodes}>Точки</Link>
     }
   ]
 

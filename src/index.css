@@ -81,3 +81,17 @@ label {
 .ant-drawer-body {
   padding: 0 !important;
 }
+
+.login-card {
+  .ant-tabs-nav-list {
+    width: 100%;
+
+    .ant-tabs-tab {
+      flex: 1 !important;
+      width: 50% !important;
+      text-align: center !important;
+
+      justify-content: center;
+    }
+  }
+}

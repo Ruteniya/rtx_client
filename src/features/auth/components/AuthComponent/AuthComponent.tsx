@@ -4,7 +4,8 @@ import { AppRoutes } from '@app/app-routes'
 import { setUser } from '@app/user-slice'
 import { useDefaultPage } from '@hooks/defaultPage'
 import { Pto } from '@rtx/types'
-import GroupService from '@services/group.service'
+import { StorageKey, StorageService } from '@services/group.service'
+import { message } from 'antd'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -18,19 +19,27 @@ const AuthComponent = () => {
   const { navigateToDefaultPage } = useDefaultPage()
 
   const handleUserValid = (user: Pto.Users.User) => {
+    if (!user.groupId) {
+      navigate(AppRoutes.login)
+      message.error('Команду не знайдено')
+      return
+    }
     dispatch(setUser(user))
-    GroupService.setGroupId(user.groupId || '')
+    StorageService.setItem(StorageKey.GroupId, user.groupId || '')
+    StorageService.setItem(StorageKey.UserId, user.id)
     navigateToDefaultPage(user)
   }
 
   // Function to fetch current user and navigate to the default page
   const fetchCurrentUser = async () => {
-    try {
-      const user = await getCurrentUser().unwrap()
-      handleUserValid(user)
-    } catch (_) {
-      navigate(AppRoutes.login)
-    }
+    await getCurrentUser()
+      .unwrap()
+      .then((user) => {
+        handleUserValid(user)
+      })
+      .catch(() => {
+        navigate(AppRoutes.login)
+      })
   }
 
   useEffect(() => {
@@ -41,13 +50,13 @@ const AuthComponent = () => {
 
     const fetchData = async () => {
       //default case
-      if (!userId) {
+      if (!userId?.length) {
         await fetchCurrentUser()
         return
       }
 
       if (!groupId) {
-        groupId = GroupService.getGroupId()
+        groupId = StorageService.getItem(StorageKey.GroupId)
 
         if (groupId) {
           await addToGroup({ groupId })

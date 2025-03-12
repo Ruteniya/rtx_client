@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Input, Button, Typography, Space, Divider, message } from 'antd'
 import { useLazyGetGroupQuery } from '@api/groups-api'
 import { Pto } from '@rtx/types'
-import GroupService from '@services/group.service'
+import { StorageKey, StorageService } from '@services/group.service'
 import { validate as validateUuid } from 'uuid'
 
 const { Text } = Typography
@@ -18,7 +18,7 @@ const GroupSelector: React.FC<GroupSelectorProps> = ({ setGroup }) => {
   const [triggerGetGroup, { isLoading, isError: getGroupError }] = useLazyGetGroupQuery()
 
   const [existingGroup, setExistingGroup] = useState<Pto.Groups.Group>()
-  const existingGroupId = GroupService.getGroupId()
+  const existingGroupId = StorageService.getItem(StorageKey.GroupId)
 
   useEffect(() => {
     const fetchGroup = async () => {
@@ -52,7 +52,7 @@ const GroupSelector: React.FC<GroupSelectorProps> = ({ setGroup }) => {
       .catch(() => null)
     if (result) {
       setGroup(result)
-      GroupService.setGroupId(result.id)
+      StorageService.setItem(StorageKey.GroupId, result.id)
     }
   }
 
@@ -76,7 +76,7 @@ const GroupSelector: React.FC<GroupSelectorProps> = ({ setGroup }) => {
         <></>
       )}
 
-      <Button type="primary" onClick={handleNextStep} loading={isLoading} disabled={!groupId}>
+      <Button type="primary" onClick={handleNextStep} loading={isLoading} disabled={!groupId} className="!mt-2">
         Далі
       </Button>
     </Space>

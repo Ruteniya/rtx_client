@@ -1,15 +1,20 @@
-class GroupService {
-  static getGroupId(): string | null {
-    return localStorage.getItem('groupId')
+enum StorageKey {
+  GroupId = 'groupId',
+  UserId = 'userId'
+}
+
+class StorageService {
+  static getItem(key: StorageKey): string | null {
+    return localStorage.getItem(key)
   }
 
-  static setGroupId(groupId: string): void {
-    localStorage.setItem('groupId', groupId)
+  static setItem(key: StorageKey, value: string): void {
+    localStorage.setItem(key, value)
   }
 
-  static removeGroupId(): void {
-    localStorage.removeItem('groupId')
+  static removeItem(key: StorageKey): void {
+    localStorage.removeItem(key)
   }
 }
 
-export default GroupService
+export { StorageKey, StorageService }
