@@ -698,7 +698,7 @@
   integrity sha512-AyleYRPU7+rgkMWbEh71fQlrzRfeP6SyMnRf9XX4fCdDPAJumdSBqYEcWPMzVQ4ScAl7E4oFfK0GUVn77xSwbw==
 
 "@rtx/types@../RtX_Packages":
-  version "1.0.0"
+  version "1.0.1"
 
 "@tailwindcss/node@4.0.10":
   version "4.0.10"

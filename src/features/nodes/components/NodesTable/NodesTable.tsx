@@ -4,6 +4,7 @@ import { DeleteOutlined, EditOutlined, MoreOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import useModal from '@hooks/useModal'
 import { useDeleteNodeMutation, useGetNodesQuery } from '@api/api-nodes'
+import ManageNodesModal from '../ManageNodesModal'
 
 const NodesTable = () => {
   const { data, isLoading } = useGetNodesQuery()
@@ -15,9 +16,9 @@ const NodesTable = () => {
 
   const handleDelete = (id: string) => {
     Modal.confirm({
-      title: 'Видалити вузол?',
+      title: 'Видалити точку?',
       onOk: async () => {
-        await deleteNode({ id }).then(() => message.success('Вузол видалено'))
+        await deleteNode({ id }).then(() => message.success('Точку видалено'))
       }
     })
   }
@@ -29,7 +30,7 @@ const NodesTable = () => {
 
   const columns = [
     {
-      title: 'Назва вузла',
+      title: 'Назва точки',
       dataIndex: 'name',
       key: 'name'
     },
@@ -44,7 +45,7 @@ const NodesTable = () => {
       key: 'question'
     },
     {
-      title: 'Очки',
+      title: 'Бали',
       dataIndex: 'points',
       key: 'points'
     },
@@ -86,7 +87,7 @@ const NodesTable = () => {
         rowKey="id"
         loading={isLoading}
       />
-      {/* <ManageNodeModal isVisible={isEditModalVisible} closeModal={closeEditModal} nodeData={currentNode} /> */}
+      <ManageNodesModal isVisible={isEditModalVisible} closeModal={closeEditModal} nodeData={currentNode} />
     </>
   )
 }

@@ -6,6 +6,7 @@ import { UploadOutlined } from '@ant-design/icons'
 import { useCreateGameMutation, useUpdateGameMutation } from '@api/api-games'
 import dayjs from '@utils/dayjs-config'
 import GameLogo from '../GameLogo'
+import { ImageUpload } from '@features/system/components'
 
 interface GameFormProps {
   isEditMode: boolean
@@ -42,6 +43,7 @@ const GameForm: React.FC<GameFormProps> = ({ isEditMode, initialValues, onSucces
       await updateGame({ id: initialValues?.id || '', updateGameDto: gameData })
         .unwrap()
         .then(message.success('Гра оновлена успішно'))
+        .catch()
     } else {
       await createGame(gameData).unwrap().then(message.success('Гру створено успішно'))
     }
@@ -64,9 +66,10 @@ const GameForm: React.FC<GameFormProps> = ({ isEditMode, initialValues, onSucces
         <Input />
       </Form.Item>
       <Form.Item name="logo" label="Логотип" rules={[{ required: true, message: 'Введіть логотип гри' }]}>
-        <Upload listType="picture" onChange={handleUploadChange} maxCount={1}>
-          {logo ? <GameLogo logo={logo || ''} /> : <Button icon={<UploadOutlined />}>Завантажити логотип</Button>}
-        </Upload>
+        <ImageUpload
+          initialValue={logo}
+          onUpload={(result: string | ArrayBuffer | null) => setLogo(result?.toString())}
+        />
       </Form.Item>
       <Form.Item name="description" label="Опис">
         <Input.TextArea />

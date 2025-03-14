@@ -12,6 +12,15 @@ export const categoriesApi = apiSlice.injectEndpoints({
       },
       providesTags: ['Categories']
     }),
+    getCategory: builder.query<Pto.Categories.Category, string>({
+      query: (id) => {
+        return {
+          url: `categories/${id}`,
+          method: 'GET'
+        }
+      },
+      providesTags: ['Categories']
+    }),
     createCategory: builder.mutation<Pto.Categories.Category, Pto.Categories.CreateCategory>({
       query: (data) => {
         return {
@@ -42,6 +51,7 @@ export const categoriesApi = apiSlice.injectEndpoints({
 
 export const {
   useGetCategoriesQuery,
+  useGetCategoryQuery,
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
   useDeleteCategoryMutation

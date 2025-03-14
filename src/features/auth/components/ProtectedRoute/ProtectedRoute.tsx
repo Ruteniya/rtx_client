@@ -10,15 +10,9 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
   const user = useAppSelector((state) => state.user.user)
 
-  console.log('user in ProptectedRout: ', user)
+  if (!user || !user.groupId || (allowedRoles && !allowedRoles.includes(user.role))) {
+    console.log('redirect to main')
 
-  if (!user || !user.groupId) {
-    console.log('redireact to login')
-
-    return <Navigate to={AppRoutes.login} replace />
-  }
-
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
     return <Navigate to={AppRoutes.main} replace />
   }
 

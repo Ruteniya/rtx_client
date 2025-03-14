@@ -95,3 +95,17 @@ label {
     }
   }
 }
+
+.nodes-tabs {
+  .ant-tabs-tab {
+    max-width: 47px !important;
+    padding: 5px !important;
+  }
+  .ant-card-head {
+    padding: 0 max(10px, 3%);
+  }
+
+  .ant-card-body {
+    padding: max(12px, 3%);
+  }
+}

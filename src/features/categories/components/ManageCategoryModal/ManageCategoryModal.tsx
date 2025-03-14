@@ -50,6 +50,8 @@ const ManageCategoryModal = ({
         open={isVisible}
         onCancel={closeModal}
         onOk={handleSubmit}
+        okText={isEditMode ? 'Готово' : 'Додати'}
+        cancelText="Скасувати"
         confirmLoading={isCreating || isUpdating}
       >
         <Form key={categoryData ? categoryData.id : 'create'} form={form} layout="vertical" requiredMark>

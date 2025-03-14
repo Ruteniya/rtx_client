@@ -41,7 +41,7 @@ const UserLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       </Header>
 
       <Layout style={{ padding: '0 24px 24px' }}>
-        <Content style={{ padding: 24, margin: 0, minHeight: 280 }}>{children}</Content>
+        <Content style={{ padding: '24px 1px', margin: 0, minHeight: 280 }}>{children}</Content>
       </Layout>
     </Layout>
   )

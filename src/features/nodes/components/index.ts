@@ -1,1 +1,7 @@
+export { default as AnswerInput } from './AnswerInput'
+export { default as ManageNodesMenu } from './ManageNodesMenu'
+export { default as ManageNodesModal } from './ManageNodesModal'
+export { default as Node } from './Node'
+export { default as NodeImage } from './NodeImage'
 export { default as NodesTable } from './NodesTable'
+export { default as NodesTabs } from './NodesTabs'

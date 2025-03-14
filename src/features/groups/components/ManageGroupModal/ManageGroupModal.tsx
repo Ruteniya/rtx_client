@@ -62,6 +62,8 @@ const ManageGroupsModal = ({
       onCancel={closeModal}
       onOk={handleSubmit}
       confirmLoading={isCreating || isUpdating}
+      okText={isEditMode ? 'Готово' : 'Додати'}
+      cancelText="Скасувати"
     >
       <Form key={groupData ? groupData.id : 'create'} form={form} layout="vertical">
         <Form.Item name="name" label="Назва команди" rules={[{ required: true, message: 'Введіть назву команди' }]}>

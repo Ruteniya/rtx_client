@@ -1,10 +1,10 @@
-import { NodesTable } from '@features/nodes/components'
+import { ManageNodesMenu, NodesTable } from '@features/nodes/components'
 import { Flex } from 'antd'
 
 const Nodes = () => {
   return (
     <>
-      {/* <ManageGroupsMenu /> */}
+      <ManageNodesMenu />
       <Flex justify="center">
         <NodesTable />
       </Flex>

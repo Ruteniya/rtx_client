@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Typography } from 'antd'
+import { Card, Tag, Typography } from 'antd'
 import { Pto } from '@rtx/types'
 
 const { Title, Text } = Typography
@@ -19,7 +19,9 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({ group }) => {
       <br />
 
       <Text strong>Категорія: </Text>
-      <Text>{group.category?.name || 'Категорія не вказана'}</Text>
+      <Tag className="!m-1 font-semibold" color={group.category?.color || 'grey'}>
+        {group.category?.name || 'Категорія не вказана'}
+      </Tag>
     </Card>
   )
 }

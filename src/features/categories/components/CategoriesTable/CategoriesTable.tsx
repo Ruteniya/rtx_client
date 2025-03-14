@@ -17,7 +17,7 @@ const CategoriesTable = () => {
     Modal.confirm({
       title: 'Видалити категорію?',
       onOk: async () => {
-        await deleteCategory(id).unwrap().then(message.success('Категорію видалено'))
+        await deleteCategory(id).unwrap().then(message.success('Категорію видалено')).catch()
       }
     })
   }

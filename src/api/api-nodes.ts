@@ -8,21 +8,21 @@ export const nodesApi = apiSlice.injectEndpoints({
         url: 'nodes',
         method: 'GET'
       }),
-      providesTags: (result) => (result ? result.items.map(({ id }) => ({ type: 'Node', id })) : ['Node'])
+      providesTags: ['Nodes']
     }),
     getShortNodes: builder.query<Pto.Nodes.ShortNodeList, void>({
       query: () => ({
-        url: 'nodes',
+        url: 'nodes/short',
         method: 'GET'
       }),
-      providesTags: (result) => (result ? result.items.map(({ id }) => ({ type: 'Node', id })) : ['Node'])
+      providesTags: ['Nodes']
     }),
     getNode: builder.query<Pto.Nodes.Node, { id: string }>({
       query: ({ id }) => ({
         url: `nodes/${id}`,
         method: 'GET'
       }),
-      providesTags: (result, error, { id }) => [{ type: 'Node', id }]
+      providesTags: (result, error, { id }) => [{ type: 'Nodes', id }]
     }),
     createNode: builder.mutation<Pto.Nodes.Node, Pto.Nodes.CreateNode>({
       query: (createNodeDto) => ({
@@ -30,22 +30,22 @@ export const nodesApi = apiSlice.injectEndpoints({
         method: 'POST',
         body: createNodeDto
       }),
-      invalidatesTags: ['Node']
+      invalidatesTags: ['Nodes']
     }),
-    // updateNode: builder.mutation<Pto.Nodes.Node, { id: string; updateNodeDto: Pto.Nodes.UpdateNode }>({
-    //   query: ({ id, updateNodeDto }) => ({
-    //     url: `nodes/${id}`,
-    //     method: 'PATCH',
-    //     body: updateNodeDto,
-    //   }),
-    //   invalidatesTags: (result, error, { id }) => [{ type: 'Node', id }],
-    // }),
+    updateNode: builder.mutation<Pto.Nodes.Node, { id: string; updateNodeDto: Pto.Nodes.UpdateNode }>({
+      query: ({ id, updateNodeDto }) => ({
+        url: `nodes/${id}`,
+        method: 'PATCH',
+        body: updateNodeDto
+      }),
+      invalidatesTags: ['Nodes']
+    }),
     deleteNode: builder.mutation<void, { id: string }>({
       query: ({ id }) => ({
         url: `nodes/${id}`,
         method: 'DELETE'
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: 'Node', id }]
+      invalidatesTags: ['Nodes']
     })
   })
 })
@@ -55,6 +55,6 @@ export const {
   useGetShortNodesQuery,
   useGetNodeQuery,
   useCreateNodeMutation,
-  //   useUpdateNodeMutation,
+  useUpdateNodeMutation,
   useDeleteNodeMutation
 } = nodesApi
