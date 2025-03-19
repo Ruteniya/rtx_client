@@ -72,7 +72,7 @@ const NodesTable = () => {
           }}
           trigger={['click']}
         >
-          <Button icon={<MoreOutlined />} />
+          <Button icon={<MoreOutlined />} onClick={(e) => e.stopPropagation()} />
         </Dropdown>
       )
     }

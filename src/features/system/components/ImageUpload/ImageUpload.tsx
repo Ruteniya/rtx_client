@@ -1,6 +1,7 @@
 import { Upload, Button } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { useState } from 'react'
+import Image from '../Image/Image'
 
 interface ImageUploadProps {
   onUpload: (result: string | ArrayBuffer | null) => void
@@ -42,11 +43,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       </Upload>
       {showImage && imageSrc && (
         <div className="my-2">
-          <img
-            src={imageSrc as string}
-            alt="Uploaded preview"
-            style={{ maxWidth: imageSize, maxHeight: imageSize || 'auto' }}
-          />
+          <Image src={imageSrc as string} alt="Uploaded preview" imageSize={imageSize} />
         </div>
       )}
     </div>

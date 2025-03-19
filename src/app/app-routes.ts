@@ -10,5 +10,9 @@ export enum AppRoutes {
   groups = adminRoute + '/groups',
   categories = adminRoute + '/categories',
   game = adminRoute + '/game',
-  nodes = adminRoute + '/nodes'
+  nodes = adminRoute + '/nodes',
+  allAnswers = adminRoute + '/all-answers',
+  processedAnswers = adminRoute + '/processed-answers',
+  unprocessedAnswers = adminRoute + '/unprocessed-answers',
+  users = adminRoute + '/users'
 }

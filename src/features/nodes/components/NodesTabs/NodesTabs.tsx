@@ -1,11 +1,11 @@
 import { useGetShortNodesQuery } from '@api/api-nodes'
 import { Card, Divider, Flex, Tabs, Tag } from 'antd'
 import Node from '../Node/Node'
-import { AnswerInput } from '..'
 import { useGetAnswersQuery } from '@api/api-answers'
 import { Pto } from '@rtx/types'
 import { ReactNode } from 'react'
-import { CheckCircleOutlined, CloseCircleOutlined, SyncOutlined } from '@ant-design/icons'
+import { CheckCircleOutlined, CloseCircleOutlined, MinusOutlined, SyncOutlined } from '@ant-design/icons'
+import { AnswerInput } from '@features/answers/components'
 
 const NodesTabs = () => {
   const { data } = useGetShortNodesQuery()
@@ -28,11 +28,11 @@ const NodesTabs = () => {
     return { text: 'Не зараховано', color: 'volcano', icon: <CloseCircleOutlined /> }
   }
 
-  const getTag = (answer?: Pto.Answers.Answer): ReactNode => {
+  const getTag = (answer?: Pto.Answers.Answer, withText = true): ReactNode => {
     const config = getTagConfig(answer)
     return (
       <Tag color={config.color} icon={config.icon} className="max-h-fit">
-        {config.text}
+        {withText ? config.text : undefined}
       </Tag>
     )
   }
@@ -41,13 +41,17 @@ const NodesTabs = () => {
     <Tabs
       className="nodes-tabs"
       tabPosition="left"
-      items={nodes.map((node) => ({
-        label: node.name,
-        key: node.id,
-        children: (() => {
-          const answer = answers?.find((answer) => answer.nodeId === node.id)
+      items={nodes.map((node) => {
+        const answer = answers?.find((answer) => answer.nodeId === node.id)
 
-          return (
+        return {
+          label: (
+            <span>
+              {node.name} {answer ? getTag(answer, false) : undefined}
+            </span>
+          ),
+          key: node.id,
+          children: (
             <Card
               className="!min-w-[200px]"
               title={
@@ -65,8 +69,8 @@ const NodesTabs = () => {
               <AnswerInput node={node} answer={answer} />
             </Card>
           )
-        })()
-      }))}
+        }
+      })}
     />
   )
 }

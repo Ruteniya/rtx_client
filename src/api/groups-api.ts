@@ -21,6 +21,15 @@ export const groupsApi = apiSlice.injectEndpoints({
       },
       providesTags: ['Groups']
     }),
+    getPopulatedGroup: builder.query<Pto.Groups.PopulatedGroup, string>({
+      query: (id) => {
+        return {
+          url: `groups/populated/${id}`,
+          method: 'GET'
+        }
+      },
+      providesTags: ['Groups', 'Users']
+    }),
     createGroup: builder.mutation<Pto.Groups.Group, Pto.Groups.CreateGroup>({
       query: (data) => {
         return {
@@ -52,6 +61,7 @@ export const groupsApi = apiSlice.injectEndpoints({
 export const {
   useGetGroupsQuery,
   useGetGroupQuery,
+  useGetPopulatedGroupQuery,
   useLazyGetGroupQuery,
   useCreateGroupMutation,
   useUpdateGroupMutation,

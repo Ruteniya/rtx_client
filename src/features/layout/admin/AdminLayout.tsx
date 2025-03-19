@@ -7,8 +7,10 @@ import {
   ExclamationCircleFilled,
   MenuOutlined,
   NodeIndexOutlined,
+  TableOutlined,
   TagOutlined,
-  UsergroupDeleteOutlined
+  UsergroupDeleteOutlined,
+  UserOutlined
 } from '@ant-design/icons'
 import { ItemType, MenuItemType } from 'antd/es/menu/interface'
 import { useAppSelector } from '@hooks/useSelector'
@@ -37,6 +39,11 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       label: <Link to={AppRoutes.groups}>Команди</Link>
     },
     {
+      key: AppRoutes.users,
+      icon: <UserOutlined />,
+      label: <Link to={AppRoutes.users}>Користувачі</Link>
+    },
+    {
       key: AppRoutes.categories,
       icon: <TagOutlined />,
       label: <Link to={AppRoutes.categories}>Категорії</Link>
@@ -45,12 +52,32 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       key: AppRoutes.nodes,
       icon: <NodeIndexOutlined />,
       label: <Link to={AppRoutes.nodes}>Точки</Link>
+    },
+    {
+      key: 'answers',
+      icon: <TableOutlined />,
+      label: 'Відповіді',
+      children: [
+        {
+          key: AppRoutes.unprocessedAnswers,
+          label: <Link to={AppRoutes.unprocessedAnswers}>Неопрацьовані</Link>
+        },
+        {
+          key: AppRoutes.processedAnswers,
+          label: <Link to={AppRoutes.processedAnswers}>Опрацьовані</Link>
+        },
+        {
+          key: AppRoutes.allAnswers,
+          label: <Link to={AppRoutes.allAnswers}>Усі</Link>
+        }
+      ]
     }
   ]
 
   const MenuWraper: React.FC = () => (
     <Flex vertical justify="space-between" className="h-full bg-white">
       <Menu
+        defaultOpenKeys={['answers']}
         selectedKeys={[location.pathname]}
         className="!mt-2"
         mode="inline"

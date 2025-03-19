@@ -25,6 +25,10 @@ const Groups = lazy(() => import('@features/groups/pages/Groups'))
 const Categories = lazy(() => import('@features/categories/pages/Categories'))
 const Game = lazy(() => import('@features/games/pages/Game'))
 const Nodes = lazy(() => import('@features/nodes/pages/Nodes'))
+const Answers = lazy(() => import('@features/answers/pages/Answers'))
+const AllUsers = lazy(() => import('@features/users/pages/Users'))
+
+const GroupDetailsPage = lazy(() => import('@features/groups/pages/GroupDetails'))
 
 //user pages
 const UserLayout = lazy(() => import('@features/layout/users'))
@@ -51,6 +55,10 @@ const router = createBrowserRouter([
             path: AppRoutes.groups
           },
           {
+            element: <AdminLayout children={<GroupDetailsPage />} />,
+            path: `${AppRoutes.groups}/:groupId`
+          },
+          {
             element: <AdminLayout children={<Categories />} />,
             path: AppRoutes.categories
           },
@@ -61,6 +69,22 @@ const router = createBrowserRouter([
           {
             element: <AdminLayout children={<Nodes />} />,
             path: AppRoutes.nodes
+          },
+          {
+            element: <AdminLayout children={<AllUsers />} />,
+            path: AppRoutes.users
+          },
+          {
+            element: <AdminLayout children={<Answers />} />,
+            path: AppRoutes.allAnswers
+          },
+          {
+            element: <AdminLayout children={<Answers processed={false} />} />,
+            path: AppRoutes.unprocessedAnswers
+          },
+          {
+            element: <AdminLayout children={<Answers processed={true} />} />,
+            path: AppRoutes.processedAnswers
           }
         ]
       },

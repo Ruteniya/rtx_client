@@ -98,7 +98,7 @@ label {
 
 .nodes-tabs {
   .ant-tabs-tab {
-    max-width: 47px !important;
+    max-width: 60px !important;
     padding: 5px !important;
   }
   .ant-card-head {
@@ -107,5 +107,23 @@ label {
 
   .ant-card-body {
     padding: max(12px, 3%);
+  }
+}
+
+.answers-table {
+  .incorrect-answer {
+    background-color: #d4bbb699;
+  }
+
+  .incorrect-answer:hover > td {
+    background-color: #c2a8a342 !important;
+  }
+
+  .correct-answer {
+    background-color: #cad9c58d;
+  }
+
+  .correct-answer:hover > td {
+    background-color: #b1bdac54 !important;
   }
 }

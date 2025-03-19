@@ -1,4 +1,3 @@
-export { default as AnswerInput } from './AnswerInput'
 export { default as ManageNodesMenu } from './ManageNodesMenu'
 export { default as ManageNodesModal } from './ManageNodesModal'
 export { default as Node } from './Node'

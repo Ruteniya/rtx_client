@@ -6,13 +6,15 @@ import { DeleteOutlined, EditOutlined, MoreOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import useModal from '@hooks/useModal'
 import ManageGroupsModal from '@features/groups/components/ManageGroupModal'
+import { useNavigate } from 'react-router-dom'
+import { AppRoutes } from '@app/app-routes'
 
 const GroupsTable = () => {
   const { data, isLoading } = useGetGroupsQuery()
   const [deleteGroup] = useDeleteGroupMutation()
   const { openModal: openEditModal, isVisible: isEditModalVisible, closeModal: closeEditModal } = useModal()
   const [currentGroup, setCurrentGroup] = useState<Pto.Groups.Group>()
-
+  const navigate = useNavigate()
   const groups = data?.items
 
   const handleDelete = (id: string) => {
@@ -60,7 +62,9 @@ const GroupsTable = () => {
                 key: 'edit',
                 label: 'Редагувати',
                 icon: <EditOutlined />,
-                onClick: () => handleEdit(record)
+                onClick: (_) => {
+                  handleEdit(record)
+                }
               },
               {
                 key: 'delete',
@@ -68,11 +72,12 @@ const GroupsTable = () => {
                 icon: <DeleteOutlined />,
                 onClick: () => handleDelete(record.id)
               }
-            ]
+            ],
+            onClick: (e) => e.domEvent.stopPropagation()
           }}
           trigger={['click']}
         >
-          <Button icon={<MoreOutlined />} />
+          <Button icon={<MoreOutlined />} onClick={(e) => e.stopPropagation()} />
         </Dropdown>
       )
     }
@@ -86,6 +91,9 @@ const GroupsTable = () => {
         columns={columns}
         rowKey="id"
         loading={isLoading}
+        onRow={(record: Pto.Groups.Group) => {
+          return { onClick: () => navigate(`${AppRoutes.groups}/${record.id}`) }
+        }}
       />
       <ManageGroupsModal isVisible={isEditModalVisible} closeModal={closeEditModal} groupData={currentGroup} />
     </>

@@ -3,9 +3,11 @@ import { useAppSelector } from '@hooks/useSelector'
 import GroupDetails from '@features/groups/components/GroupDetails'
 import { NodesTabs } from '@features/nodes/components'
 import { useGetCategoryQuery } from '@api/api-categories'
+import { useGetGroupQuery } from '@api/groups-api'
 
 const CurrentGroup: React.FC = () => {
-  const group = useAppSelector((state) => state.user.user?.group)
+  const user = useAppSelector((state) => state.user.user)
+  const { data: group } = useGetGroupQuery(user?.groupId as string, { skip: user?.groupId == undefined })
   const { data: category } = useGetCategoryQuery(group?.categoryId || '', { skip: group?.categoryId == undefined })
 
   return (

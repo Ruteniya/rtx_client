@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Form, Input, Button, Flex, message } from 'antd'
 import { Pto } from '@rtx/types'
 import { ImageUpload } from '@features/system/components'
@@ -23,12 +23,22 @@ const NodeAnswerForm = ({ node, answer }: NodeAnswerFormProps) => {
     console.log('values: ', values)
     await giveAnswer({ answerValue: values.answerValue, userComment: values.userComment, nodeId: node.id })
       .unwrap()
-      .then(message.success(`Відповідь для точки ${node.name} надіслана`))
+      .then(message.success(`Відповідь для точки ${node.name} надіслана`, 20))
       .catch()
   }
 
+  useEffect(() => {
+    if (answer) {
+      form.setFieldsValue({ answerValue: answer.answerValue, userComment: answer.userComment })
+      if (answer.userComment) setShowComment(true)
+    } else {
+      form.resetFields()
+    }
+  }, [answer, form])
+
   return (
     <Form
+      disabled={answer?.correct}
       form={form}
       layout="vertical"
       initialValues={{ answerValue: answer?.answerValue || '', userComment: answer?.userComment || '' }}
@@ -47,7 +57,10 @@ const NodeAnswerForm = ({ node, answer }: NodeAnswerFormProps) => {
           label="Фото-відповідь"
           rules={[{ required: true, message: 'Завантажте фото' }]}
         >
-          <ImageUpload onUpload={(result: string | ArrayBuffer | null) => form.setFieldValue('answerValue', result)} />
+          <ImageUpload
+            initialValue={answer?.answerValue}
+            onUpload={(result: string | ArrayBuffer | null) => form.setFieldValue('answerValue', result)}
+          />
         </Form.Item>
       )}
       <Button
