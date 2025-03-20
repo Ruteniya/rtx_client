@@ -1,11 +1,8 @@
 import React from 'react'
-import { Form, Input, DatePicker, Button, message, Upload } from 'antd'
+import { Form, Input, DatePicker, Button, message } from 'antd'
 import { Pto } from '@rtx/types'
-import { UploadChangeParam } from 'antd/es/upload/interface'
-import { UploadOutlined } from '@ant-design/icons'
 import { useCreateGameMutation, useUpdateGameMutation } from '@api/api-games'
 import dayjs from '@utils/dayjs-config'
-import GameLogo from '../GameLogo'
 import { ImageUpload } from '@features/system/components'
 
 interface GameFormProps {
@@ -21,15 +18,6 @@ const GameForm: React.FC<GameFormProps> = ({ isEditMode, initialValues, onSucces
   const [form] = Form.useForm()
   const [logo, setLogo] = React.useState<string | undefined>(initialValues?.logo)
 
-  // Function to handle image file selection and conversion to base64
-  const handleUploadChange = (info: UploadChangeParam) => {
-    if (info.file.status !== 'uploading') {
-      setTimeout(() => {
-        setLogo(info?.file?.thumbUrl)
-      }, 1000)
-    }
-  }
-
   const handleSubmit = async (values: any) => {
     const gameData: Pto.Games.CreateGame = {
       name: values.name,
@@ -42,7 +30,7 @@ const GameForm: React.FC<GameFormProps> = ({ isEditMode, initialValues, onSucces
     if (isEditMode) {
       await updateGame({ id: initialValues?.id || '', updateGameDto: gameData })
         .unwrap()
-        .then(message.success('Гра оновлена успішно'))
+        .then(() => message.success('Гра оновлена успішно'))
         .catch()
     } else {
       await createGame(gameData).unwrap().then(message.success('Гру створено успішно'))

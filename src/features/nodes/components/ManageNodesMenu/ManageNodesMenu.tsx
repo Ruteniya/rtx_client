@@ -17,7 +17,7 @@ const ManageNodesMenu = () => {
   return (
     <>
       <div className="flex justify-between mb-4 flex-wrap">
-        <Typography.Title level={2}>Точки</Typography.Title>
+        <Typography.Title level={4}>Точки</Typography.Title>
         <Dropdown menu={{ items: menuItems }}>
           <Button icon={<DownOutlined />}>Керування</Button>
         </Dropdown>

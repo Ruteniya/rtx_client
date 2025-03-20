@@ -37,10 +37,15 @@ const NodesTabs = () => {
     )
   }
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 300, behavior: 'smooth' })
+  }
+
   return (
     <Tabs
       className="nodes-tabs"
       tabPosition="left"
+      onChange={scrollToTop}
       items={nodes.map((node) => {
         const answer = answers?.find((answer) => answer.nodeId === node.id)
 

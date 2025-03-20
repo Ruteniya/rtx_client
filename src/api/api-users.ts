@@ -4,19 +4,12 @@ import { Pto } from '@rtx/types'
 
 export const usersApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getCurrentUser: builder.query<Pto.Users.User, void>({
+    getCurrentUser: builder.query<Pto.Users.PopulatedUser, void>({
       query: () => ({
         url: 'users/me',
         method: 'GET'
       }),
       providesTags: ['CurrentUser']
-    }),
-    getGroupMembers: builder.query<Pto.Users.UserList, string>({
-      query: (groupId) => ({
-        url: `users/members/${groupId}`,
-        method: 'GET'
-      }),
-      providesTags: ['Users']
     }),
     changeUserRole: builder.mutation<Pto.Users.User, { userId: string; updateRoleDto: Pto.Users.ChangeUserRole }>({
       query: ({ userId, updateRoleDto }) => ({

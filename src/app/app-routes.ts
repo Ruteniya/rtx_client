@@ -14,5 +14,6 @@ export enum AppRoutes {
   allAnswers = adminRoute + '/all-answers',
   processedAnswers = adminRoute + '/processed-answers',
   unprocessedAnswers = adminRoute + '/unprocessed-answers',
-  users = adminRoute + '/users'
+  users = adminRoute + '/users',
+  results = adminRoute + '/results'
 }

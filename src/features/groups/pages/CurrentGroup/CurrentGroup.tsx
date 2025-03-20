@@ -1,18 +1,22 @@
 import React from 'react'
-import { useAppSelector } from '@hooks/useSelector'
 import GroupDetails from '@features/groups/components/GroupDetails'
 import { NodesTabs } from '@features/nodes/components'
 import { useGetCategoryQuery } from '@api/api-categories'
-import { useGetGroupQuery } from '@api/groups-api'
+import { useGetCurrentUserQuery } from '@api/api-users'
 
 const CurrentGroup: React.FC = () => {
-  const user = useAppSelector((state) => state.user.user)
-  const { data: group } = useGetGroupQuery(user?.groupId as string, { skip: user?.groupId == undefined })
-  const { data: category } = useGetCategoryQuery(group?.categoryId || '', { skip: group?.categoryId == undefined })
+  const { data: currentUser } = useGetCurrentUserQuery()
+  // const { data: category } = useGetCategoryQuery(currentUser?.group.categoryId || '', {
+  //   skip: currentUser?.group.categoryId == undefined
+  // })
 
   return (
     <div>
-      {group ? <GroupDetails group={{ ...group, category }} /> : 'Інформація про групу відсутня'}
+      {currentUser?.group ? (
+        <GroupDetails group={{ ...currentUser?.group, category: currentUser.group.category }} />
+      ) : (
+        'Інформація про групу відсутня'
+      )}
       <NodesTabs />
     </div>
   )

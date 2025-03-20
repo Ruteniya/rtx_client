@@ -80,6 +80,7 @@ const CategoriesTable = () => {
         columns={columns}
         rowKey="id"
         loading={isLoading}
+        scroll={{ scrollToFirstRowOnChange: true, x: true }}
       />
       <ManageCategoryModal isVisible={isEditModalVisible} closeModal={closeEditModal} categoryData={currentCategory} />
     </>

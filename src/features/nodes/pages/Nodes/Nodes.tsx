@@ -1,11 +1,12 @@
 import { ManageNodesMenu, NodesTable } from '@features/nodes/components'
-import { Flex } from 'antd'
+import { Divider, Flex } from 'antd'
 
 const Nodes = () => {
   return (
     <>
       <ManageNodesMenu />
-      <Flex justify="center">
+      <Divider />
+      <Flex className="overflow-auto">
         <NodesTable />
       </Flex>
     </>

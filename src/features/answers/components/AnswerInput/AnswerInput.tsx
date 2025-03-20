@@ -18,14 +18,23 @@ const NodeAnswerForm = ({ node, answer }: NodeAnswerFormProps) => {
   const [form] = Form.useForm()
   const [showComment, setShowComment] = useState(false)
   const [giveAnswer, { isLoading }] = useGiveAnswerMutation()
+  const [isFormChanged, setIsFormChanged] = useState(false)
 
   const onSubmit = async (values: FormValues) => {
-    console.log('values: ', values)
     await giveAnswer({ answerValue: values.answerValue, userComment: values.userComment, nodeId: node.id })
       .unwrap()
       .then(message.success(`Відповідь для точки ${node.name} надіслана`, 20))
       .catch()
   }
+
+  // // Track form changes
+  // useEffect(() => {
+  //   const unsubscribe = form.watch(() => {
+  //     setIsFormChanged(form.isFieldsTouched(true))
+  //   })
+
+  //   return () => unsubscribe()
+  // }, [form])
 
   useEffect(() => {
     if (answer) {
@@ -43,6 +52,7 @@ const NodeAnswerForm = ({ node, answer }: NodeAnswerFormProps) => {
       layout="vertical"
       initialValues={{ answerValue: answer?.answerValue || '', userComment: answer?.userComment || '' }}
       onFinish={onSubmit}
+      onFieldsChange={() => setIsFormChanged(true)}
     >
       {node.answerType === 'Text' && (
         <Form.Item name="answerValue" label="Відповідь" rules={[{ required: true, message: 'Введіть відповідь' }]}>
@@ -59,7 +69,10 @@ const NodeAnswerForm = ({ node, answer }: NodeAnswerFormProps) => {
         >
           <ImageUpload
             initialValue={answer?.answerValue}
-            onUpload={(result: string | ArrayBuffer | null) => form.setFieldValue('answerValue', result)}
+            onUpload={(result: string | ArrayBuffer | null) => {
+              form.setFieldValue('answerValue', result)
+              setIsFormChanged(true)
+            }}
           />
         </Form.Item>
       )}
@@ -78,7 +91,7 @@ const NodeAnswerForm = ({ node, answer }: NodeAnswerFormProps) => {
       )}
 
       <Flex justify="end" className="!my-2">
-        <Button type="primary" htmlType="submit" loading={isLoading}>
+        <Button type="primary" htmlType="submit" loading={isLoading} disabled={!isFormChanged}>
           {answer ? 'Змінити відповідь' : 'Відповісти'}
         </Button>
       </Flex>

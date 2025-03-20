@@ -13,8 +13,24 @@ const GameInfo: React.FC<GameInfoProps> = ({ game }) => {
       <GameLogo logo={game?.logo || ''} />
       <Typography.Title>{game.name}</Typography.Title>
       <Typography.Paragraph>{game.description}</Typography.Paragraph>
-      <strong>Дата початку:</strong> {new Date(game.startDate).toLocaleString()}
-      <strong>Дата закінчення:</strong> {new Date(game.endDate).toLocaleString()}
+      <strong>Дата початку:</strong>{' '}
+      {new Date(game.startDate).toLocaleString('uk-UA', {
+        year: 'numeric',
+        month: 'long', // або '2-digit' для числового формату
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      })}
+      <strong>Дата закінчення:</strong>{' '}
+      {new Date(game.endDate).toLocaleString('uk-UA', {
+        year: 'numeric',
+        month: 'long', // або '2-digit' для числового формату
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      })}
     </Flex>
   )
 }

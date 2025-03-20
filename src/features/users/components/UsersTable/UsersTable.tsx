@@ -86,6 +86,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ users, isLoading, showGroup, pa
         rowKey="id"
         loading={isLoading}
         pagination={pagination}
+        scroll={{ scrollToFirstRowOnChange: true, x: true }}
       />
       {selectedUser && (
         <UpdateUserRoleModal

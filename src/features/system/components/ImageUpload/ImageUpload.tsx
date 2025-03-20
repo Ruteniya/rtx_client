@@ -43,7 +43,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       </Upload>
       {showImage && imageSrc && (
         <div className="my-2">
-          <Image src={imageSrc as string} alt="Uploaded preview" imageSize={imageSize} />
+          <Image src={imageSrc as string} alt="Uploaded preview" imageSize={imageSize} expandable={true} />
         </div>
       )}
     </div>

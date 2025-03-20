@@ -1,11 +1,39 @@
+import { useState } from 'react'
+import { Flex, Modal } from 'antd'
+
 interface ImageProps {
   src: string
   imageSize?: string | number
   alt?: string
+  expandable?: boolean
 }
 
-const Image: React.FC<ImageProps> = ({ src, imageSize = 150, alt = 'image' }) => {
-  return <img src={src} alt={alt} style={{ maxWidth: imageSize, maxHeight: imageSize || 'auto' }} />
+const Image: React.FC<ImageProps> = ({ src, imageSize = 150, alt = 'image', expandable = false }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const handleOpen = (e: React.MouseEvent<HTMLImageElement>) => {
+    if (expandable) setIsModalOpen(true)
+    e.stopPropagation()
+  }
+
+  return (
+    <>
+      <img
+        src={src}
+        alt={alt}
+        style={{ maxWidth: imageSize, maxHeight: imageSize || 'auto', cursor: expandable ? 'pointer' : 'default' }}
+        onClick={handleOpen}
+      />
+
+      {expandable && (
+        <Modal open={isModalOpen} footer={null} onCancel={() => setIsModalOpen(false)} centered>
+          <Flex justify="center">
+            <img src={src} alt={alt} style={{ width: '90%' }} />
+          </Flex>
+        </Modal>
+      )}
+    </>
+  )
 }
 
 export default Image

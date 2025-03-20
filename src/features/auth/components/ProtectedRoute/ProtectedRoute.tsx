@@ -11,8 +11,6 @@ const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
   const user = useAppSelector((state) => state.user.user)
 
   if (!user || !user.groupId || (allowedRoles && !allowedRoles.includes(user.role))) {
-    console.log('redirect to main')
-
     return <Navigate to={AppRoutes.main} replace />
   }
 

@@ -32,10 +32,7 @@ export const useQueryParams = () => {
     const params = new URLSearchParams(searchParams)
     Object.entries(newParams).forEach(([key, value]) => {
       if (value.length) {
-        console.log('setParams')
-
         if (Array.isArray(value)) {
-          console.log('isarray: ', value)
           params.set(key, value.join(ARRAY_DELIMITER))
         } else {
           params.set(key, value)

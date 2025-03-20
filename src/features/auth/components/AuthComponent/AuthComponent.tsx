@@ -38,7 +38,6 @@ const AuthComponent = () => {
         handleUserValid(user)
       })
       .catch(() => {
-        console.log('redirect to login')
         navigate(AppRoutes.login)
       })
   }
@@ -66,13 +65,10 @@ const AuthComponent = () => {
               handleUserValid(user)
             })
             .catch((error) => {
-              console.log('redirect to login')
               navigate(AppRoutes.login)
               console.error(error)
             })
         } else {
-          console.log('redirect to login')
-
           navigate(AppRoutes.login)
         }
       } else {

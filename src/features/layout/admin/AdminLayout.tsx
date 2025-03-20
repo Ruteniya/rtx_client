@@ -1,29 +1,43 @@
 import React, { useState } from 'react'
-import { Layout, Menu, Drawer, Button, Flex } from 'antd'
+import { Layout, Menu, Drawer, Button, Flex, MenuProps } from 'antd'
 import { Link, useLocation } from 'react-router-dom'
 import { AppRoutes } from '@app/app-routes'
 import {
   CheckCircleOutlined,
   ExclamationCircleFilled,
   MenuOutlined,
+  MessageOutlined,
   NodeIndexOutlined,
   TableOutlined,
   TagOutlined,
   UsergroupDeleteOutlined,
   UserOutlined
 } from '@ant-design/icons'
-import { ItemType, MenuItemType } from 'antd/es/menu/interface'
 import { useAppSelector } from '@hooks/useSelector'
 import LogoutButton from '@features/auth/components/LogoutButton/LogoutButton'
 
 const { Sider, Content } = Layout
+
+type MenuItem = Required<MenuProps>['items'][number]
 
 const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation()
   const game = useAppSelector((state) => state.user.game)
   const [collapsed, setCollapsed] = useState(true)
 
-  const menuItems: ItemType<MenuItemType>[] = [
+  const rootSubmenuKeys = ['answers']
+  const [openKeysState, setOpenKeysState] = useState(['answers'])
+
+  const onOpenChange = (openKeys: string[]) => {
+    const latestOpenKey = openKeys.find((key) => openKeysState.indexOf(key) === -1)
+    if (rootSubmenuKeys.indexOf(latestOpenKey as string) === -1) {
+      setOpenKeysState(openKeys)
+    } else {
+      setOpenKeysState(latestOpenKey ? [latestOpenKey] : [])
+    }
+  }
+
+  const menuItems: MenuItem[] = [
     {
       key: AppRoutes.game,
       icon: game?.id ? <CheckCircleOutlined /> : <ExclamationCircleFilled />,
@@ -55,7 +69,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     },
     {
       key: 'answers',
-      icon: <TableOutlined />,
+      icon: <MessageOutlined />,
       label: 'Відповіді',
       children: [
         {
@@ -71,14 +85,20 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           label: <Link to={AppRoutes.allAnswers}>Усі</Link>
         }
       ]
+    },
+    {
+      key: AppRoutes.results,
+      icon: <TableOutlined />,
+      label: <Link to={AppRoutes.results}>Результати</Link>
     }
   ]
 
   const MenuWraper: React.FC = () => (
     <Flex vertical justify="space-between" className="h-full bg-white">
       <Menu
-        defaultOpenKeys={['answers']}
         selectedKeys={[location.pathname]}
+        openKeys={openKeysState}
+        onOpenChange={onOpenChange}
         className="!mt-2"
         mode="inline"
         items={menuItems}
@@ -107,7 +127,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <Drawer
         open={!collapsed}
         onClose={() => setCollapsed(true)}
-        onClick={() => setCollapsed(true)}
+        onClick={() => {}}
         placement="left"
         closable
         width={200}

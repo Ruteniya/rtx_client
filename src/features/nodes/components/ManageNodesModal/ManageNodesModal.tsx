@@ -104,7 +104,7 @@ const ManageNodesModal = ({
           </Form.Item>
         )}
         <Form.Item name="points" label="Бали" rules={[{ required: true, message: 'Вкажіть кількість балів' }]}>
-          <InputNumber min={0} placeholder="Ex. 10" className="!min-w-[150px]" />
+          <InputNumber step={5} min={0} placeholder="Ex. 10" className="!min-w-[150px]" />
         </Form.Item>
         <Form.Item name="adminDescription" label="Опис для адміністратора">
           <Input.TextArea placeholder="Ex. Ця точка може бути зарахована лише для категорії УПН" />

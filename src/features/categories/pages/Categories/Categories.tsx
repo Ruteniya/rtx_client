@@ -6,7 +6,7 @@ const Categories = () => {
     <div>
       <ManageCategoriesMenu />
       <Divider />
-      <Flex justify="center">
+      <Flex className="overflow-auto">
         <CategoriesTable />
       </Flex>
     </div>

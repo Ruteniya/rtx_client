@@ -27,6 +27,7 @@ const Game = lazy(() => import('@features/games/pages/Game'))
 const Nodes = lazy(() => import('@features/nodes/pages/Nodes'))
 const Answers = lazy(() => import('@features/answers/pages/Answers'))
 const AllUsers = lazy(() => import('@features/users/pages/Users'))
+const Results = lazy(() => import('@features/results/pages/Results'))
 
 const GroupDetailsPage = lazy(() => import('@features/groups/pages/GroupDetails'))
 
@@ -85,6 +86,10 @@ const router = createBrowserRouter([
           {
             element: <AdminLayout children={<Answers processed={true} />} />,
             path: AppRoutes.processedAnswers
+          },
+          {
+            element: <AdminLayout children={<Results />} />,
+            path: AppRoutes.results
           }
         ]
       },

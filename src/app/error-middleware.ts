@@ -7,11 +7,11 @@ export const errorMiddleware: Middleware = () => (next) => (action: any) => {
     const errorMessage = action.payload?.data?.message || 'Сталася помилка'
     const errorName = action.payload?.data?.name
 
-    message.error(errorMessage)
-
-    if (errorName === 'TokenExpiredError' && action.payload?.status === 401) {
+    if ((errorName === 'TokenExpiredError' || errorMessage == 'Unauthorized') && action.payload?.status === 401) {
       window.location.href = AppRoutes.login
+      return
     }
+    message.error(errorMessage)
   }
 
   return next(action)

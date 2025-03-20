@@ -8,7 +8,7 @@ const Groups = () => {
       <ManageGroupsMenu />
       <Divider />
 
-      <Flex justify="center">
+      <Flex className="overflow-auto" vertical>
         <GroupsTable />
       </Flex>
     </>

@@ -18,7 +18,10 @@ const NodesTable = () => {
     Modal.confirm({
       title: 'Видалити точку?',
       onOk: async () => {
-        await deleteNode({ id }).then(() => message.success('Точку видалено'))
+        await deleteNode({ id })
+          .unwrap()
+          .then(() => message.success('Точку видалено'))
+          .catch()
       }
     })
   }
@@ -86,6 +89,7 @@ const NodesTable = () => {
         columns={columns}
         rowKey="id"
         loading={isLoading}
+        scroll={{ scrollToFirstRowOnChange: true, x: true }}
       />
       <ManageNodesModal isVisible={isEditModalVisible} closeModal={closeEditModal} nodeData={currentNode} />
     </>
