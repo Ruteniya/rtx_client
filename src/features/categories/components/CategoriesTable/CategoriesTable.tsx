@@ -3,7 +3,7 @@ import { useDeleteCategoryMutation, useGetCategoriesQuery } from '@api/api-categ
 import { MoreOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import ManageCategoryModal from '../ManageCategoryModal'
 import useModal from '@hooks/useModal'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 import { useState } from 'react'
 
 const CategoriesTable = () => {

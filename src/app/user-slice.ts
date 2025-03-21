@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 
 export interface UserState {
   user: Pto.Users.User | null

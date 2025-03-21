@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Input, Button, Typography, Space, Divider, message } from 'antd'
 import { useLazyGetGroupQuery } from '@api/groups-api'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 import { StorageKey, StorageService } from '@services/group.service'
 import { validate as validateUuid } from 'uuid'
 

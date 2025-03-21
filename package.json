@@ -4,15 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "build": "vite build --mode production",
+    "build:dev": "vite build --mode development",
+    "dev": "vite --mode development"
   },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
     "@reduxjs/toolkit": "^2.6.0",
-    "@rtx/types": "../RtX_Packages",
     "@tailwindcss/vite": "^4.0.10",
     "antd": "^5.24.3",
     "papaparse": "^5.5.2",
@@ -21,6 +19,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.2.0",
     "redux-persist": "^6.0.0",
+    "rtxtypes": "^1.0.2",
     "tailwindcss": "^4.0.10",
     "uuid": "^11.1.0"
   },
@@ -28,8 +27,8 @@
     "@eslint/js": "^9.21.0",
     "@types/node": "^22.13.9",
     "@types/papaparse": "^5.3.15",
-    "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.4",
+    "@types/react": "18",
+    "@types/react-dom": "18",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.21.0",
     "eslint-plugin-react-hooks": "^5.1.0",

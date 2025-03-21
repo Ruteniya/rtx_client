@@ -1,6 +1,6 @@
 import { getQueryParamString } from '@utils/get-query-param-string'
 import { apiSlice } from './api-slice'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 
 export const usersApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

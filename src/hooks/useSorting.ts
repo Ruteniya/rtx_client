@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useQueryParams } from './useQueryParam'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 
 const sortByKey: keyof Pto.App.Sorting = 'sortBy'
 const sortOrderKey: keyof Pto.App.Sorting = 'sortOrder'

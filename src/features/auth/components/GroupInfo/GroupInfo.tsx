@@ -1,5 +1,5 @@
 import { Typography, Space } from 'antd'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 
 const { Title, Text } = Typography
 

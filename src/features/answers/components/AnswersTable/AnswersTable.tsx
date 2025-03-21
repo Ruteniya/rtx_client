@@ -1,10 +1,8 @@
 import { Button, Flex, message, Radio, Table, TablePaginationConfig, Tag, Tooltip, Typography } from 'antd'
 import { useEvaluateAnswersMutation } from '@api/api-answers'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 import { Image } from '@features/system/components'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { AppRoutes } from '@app/app-routes'
 
 export type AnswersFilters = {
   searchText?: string
@@ -23,8 +21,6 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
   const [evaluateAnswers] = useEvaluateAnswersMutation()
   const [mode, setMode] = useState<'view' | 'evaluation'>('view')
   const [key, setKey] = useState(1)
-
-  const navigate = useNavigate()
 
   const handleSelectAnswer = (answerId: string, correct: boolean) => {
     setSelectedAnswers((prev) => {

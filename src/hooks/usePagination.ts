@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useQueryParams } from './useQueryParam'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 
 const pageKey: keyof Pto.App.Pagination = 'page'
 const sizeKey: keyof Pto.App.Pagination = 'size'

@@ -6,14 +6,14 @@ import { useGetCurrentUserQuery } from '@api/api-users'
 
 const CurrentGroup: React.FC = () => {
   const { data: currentUser } = useGetCurrentUserQuery()
-  // const { data: category } = useGetCategoryQuery(currentUser?.group.categoryId || '', {
-  //   skip: currentUser?.group.categoryId == undefined
-  // })
+  const { data: category } = useGetCategoryQuery(currentUser?.group.categoryId || '', {
+    skip: currentUser == undefined || currentUser?.group.category !== undefined
+  })
 
   return (
     <div>
       {currentUser?.group ? (
-        <GroupDetails group={{ ...currentUser?.group, category: currentUser.group.category }} />
+        <GroupDetails group={{ ...currentUser?.group, category: currentUser.group.category || category }} />
       ) : (
         'Інформація про групу відсутня'
       )}

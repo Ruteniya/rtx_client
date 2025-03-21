@@ -2,7 +2,7 @@ import { Flex, Spin } from 'antd'
 import { AppRoutes } from '@app/app-routes'
 import { lazy, Suspense } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 // import { ThemeProvider } from '@features/system/components'
 
 //system
@@ -52,7 +52,11 @@ const router = createBrowserRouter([
         element: <ProtectedRoute allowedRoles={[Pto.Users.UserRole.Admin, Pto.Users.UserRole.SystemAdmin]} />,
         children: [
           {
-            element: <AdminLayout children={<Groups />} />,
+            element: (
+              <AdminLayout>
+                <Groups />
+              </AdminLayout>
+            ),
             path: AppRoutes.groups
           },
           {

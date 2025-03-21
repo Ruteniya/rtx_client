@@ -1,5 +1,5 @@
-import { Pto } from '@rtx/types'
-import { Flex, Typography } from 'antd'
+import { Pto } from 'rtxtypes'
+import { Flex } from 'antd'
 import { Image } from '@features/system/components'
 
 type NodeProps = {

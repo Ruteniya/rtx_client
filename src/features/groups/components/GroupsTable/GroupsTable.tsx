@@ -1,7 +1,7 @@
 import { Button, Dropdown, Flex, message, Modal, Table, Tag } from 'antd'
 import { useDeleteGroupMutation, useGetGroupsQuery } from '@api/groups-api'
 
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 import { DeleteOutlined, DownloadOutlined, EditOutlined, MoreOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import useModal from '@hooks/useModal'

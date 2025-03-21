@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Form, Input, Button, Flex, message } from 'antd'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 import { ImageUpload } from '@features/system/components'
 import { useGiveAnswerMutation } from '@api/api-answers'
 
@@ -27,18 +27,10 @@ const NodeAnswerForm = ({ node, answer }: NodeAnswerFormProps) => {
       .catch()
   }
 
-  // // Track form changes
-  // useEffect(() => {
-  //   const unsubscribe = form.watch(() => {
-  //     setIsFormChanged(form.isFieldsTouched(true))
-  //   })
-
-  //   return () => unsubscribe()
-  // }, [form])
-
   useEffect(() => {
     if (answer) {
       form.setFieldsValue({ answerValue: answer.answerValue, userComment: answer.userComment })
+      setIsFormChanged(false)
       if (answer.userComment) setShowComment(true)
     } else {
       form.resetFields()

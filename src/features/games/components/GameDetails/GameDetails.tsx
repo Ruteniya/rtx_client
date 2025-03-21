@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, Button } from 'antd'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 import { useState } from 'react'
 import GameForm from '../GameForm'
 import GameInfo from '../GameInfo'
@@ -15,6 +15,7 @@ const GameDetails: React.FC<GameDetailsProps> = ({ game }) => {
   return (
     <div>
       <Card
+        className="!min-w-[70%]"
         title="Поточна гра"
         extra={
           <Button onClick={() => setIsEditMode(!isEditMode)}>{isEditMode ? 'Згорнути форму' : 'Редагувати'}</Button>

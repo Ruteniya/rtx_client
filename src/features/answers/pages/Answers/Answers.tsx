@@ -5,7 +5,7 @@ import { useGetGroupsQuery } from '@api/groups-api'
 import { AnswersFilters } from '@features/answers/components/AnswersTable/AnswersTable'
 import { usePagination } from '@hooks/usePagination'
 import { useQueryParams, ARRAY_DELIMITER } from '@hooks/useQueryParam'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 import { useMemo } from 'react'
 
 enum PaginationKeys {
@@ -88,7 +88,6 @@ const Answers = ({ processed }: { processed?: boolean }) => {
       </Flex>
       <Flex justify="center">
         <AnswersTable
-          // processed={processed}
           isLoading={isAnswersLoading}
           answers={answers}
           pagination={{

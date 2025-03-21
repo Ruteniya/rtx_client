@@ -1,5 +1,5 @@
 import { Modal, Form, Select, message } from 'antd'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 import { useState } from 'react'
 import { useChangeUserRoleMutation } from '@api/api-users'
 

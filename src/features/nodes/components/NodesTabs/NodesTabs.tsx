@@ -1,14 +1,14 @@
 import { useGetShortNodesQuery } from '@api/api-nodes'
-import { Card, Divider, Flex, Tabs, Tag } from 'antd'
+import { Card, Divider, Flex, Spin, Tabs, Tag } from 'antd'
 import Node from '../Node/Node'
 import { useGetAnswersQuery } from '@api/api-answers'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 import { ReactNode } from 'react'
-import { CheckCircleOutlined, CloseCircleOutlined, MinusOutlined, SyncOutlined } from '@ant-design/icons'
+import { CheckCircleOutlined, CloseCircleOutlined, SyncOutlined } from '@ant-design/icons'
 import { AnswerInput } from '@features/answers/components'
 
 const NodesTabs = () => {
-  const { data } = useGetShortNodesQuery()
+  const { data, isLoading: isNodesLoading } = useGetShortNodesQuery()
   const { data: answers } = useGetAnswersQuery()
   const nodes = data?.items || []
 
@@ -40,6 +40,8 @@ const NodesTabs = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 300, behavior: 'smooth' })
   }
+
+  if (isNodesLoading) return <Spin size="large" />
 
   return (
     <Tabs

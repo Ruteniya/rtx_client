@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { AppRoutes } from '@app/app-routes'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 
 export const useDefaultPage = () => {
   const navigate = useNavigate()

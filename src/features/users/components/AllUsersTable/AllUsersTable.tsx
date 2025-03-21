@@ -5,7 +5,7 @@ import { useGetAllUsersQuery } from '@api/api-users'
 import { usePagination } from '@hooks/usePagination'
 import { useMemo } from 'react'
 import { useQueryParams } from '@hooks/useQueryParam'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 
 export type AnswersFilters = {
   searchText?: string

@@ -1,5 +1,5 @@
 import { Button, Dropdown, message, Modal, Table } from 'antd'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 import { DeleteOutlined, EditOutlined, MoreOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import useModal from '@hooks/useModal'

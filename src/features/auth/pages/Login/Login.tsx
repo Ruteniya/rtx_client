@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Typography, Card, Flex, Divider, Tabs } from 'antd'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 import { GameLogo } from '@features/games/components'
 import { GroupInfo, GroupSelector, LoginButton } from '@features/auth/components'
 import { useAppSelector } from '@hooks/useSelector'

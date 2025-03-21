@@ -1,6 +1,6 @@
 import { Modal, Form, Input, Select, InputNumber } from 'antd'
 import { useEffect } from 'react'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 import { useCreateNodeMutation, useUpdateNodeMutation } from '@api/api-nodes'
 import { ImageUpload } from '@features/system/components'
 

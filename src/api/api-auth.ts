@@ -1,5 +1,5 @@
 import { apiSlice } from './api-slice'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 
 export const authApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

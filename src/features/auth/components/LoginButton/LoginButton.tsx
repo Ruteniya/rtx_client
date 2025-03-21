@@ -1,11 +1,11 @@
 import { GoogleOutlined } from '@ant-design/icons'
-import { settings } from '@app/settings'
+import { settings } from '../../../../settings'
 import { Button } from 'antd'
 import React from 'react'
 
 const LoginButton: React.FC = () => {
   const handleLogin = () => {
-    window.location.href = `${settings.backendUrl}/auth/google/login`
+    window.location.href = `${settings.backendHost}/auth/google/login`
   }
 
   return (

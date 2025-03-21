@@ -1,6 +1,6 @@
 import { Table, Dropdown, Button, Flex, TablePaginationConfig } from 'antd'
 import { EditOutlined, MoreOutlined } from '@ant-design/icons'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 import useModal from '@hooks/useModal'
 import { useState } from 'react'
 import UpdateUserRoleModal from '../UpdateUserRoleModal'

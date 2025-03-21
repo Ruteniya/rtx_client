@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { AppRoutes } from '@app/app-routes'
 import { useAppSelector } from '@hooks/useSelector'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 
 interface ProtectedRouteProps {
   allowedRoles?: Pto.Users.UserRoleType[]

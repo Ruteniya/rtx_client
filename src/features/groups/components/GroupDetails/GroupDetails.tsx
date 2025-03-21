@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, Tag, Typography } from 'antd'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 
 const { Title, Text } = Typography
 

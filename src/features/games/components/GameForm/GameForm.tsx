@@ -1,6 +1,6 @@
 import React from 'react'
 import { Form, Input, DatePicker, Button, message } from 'antd'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 import { useCreateGameMutation, useUpdateGameMutation } from '@api/api-games'
 import dayjs from '@utils/dayjs-config'
 import { ImageUpload } from '@features/system/components'

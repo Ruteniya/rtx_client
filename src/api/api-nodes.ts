@@ -1,4 +1,4 @@
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 import { apiSlice } from './api-slice'
 
 export const nodesApi = apiSlice.injectEndpoints({
@@ -22,7 +22,7 @@ export const nodesApi = apiSlice.injectEndpoints({
         url: `nodes/${id}`,
         method: 'GET'
       }),
-      providesTags: (result, error, { id }) => [{ type: 'Nodes', id }]
+      providesTags: (_, __, { id }) => [{ type: 'Nodes', id }]
     }),
     createNode: builder.mutation<Pto.Nodes.Node, Pto.Nodes.CreateNode>({
       query: (createNodeDto) => ({

@@ -2,7 +2,7 @@ import { Modal, Form, Input, Select } from 'antd'
 import { useEffect } from 'react'
 import { useCreateGroupMutation, useUpdateGroupMutation } from '@api/groups-api'
 import { useGetCategoriesQuery } from '@api/api-categories'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 
 const ManageGroupsModal = ({
   groupData,

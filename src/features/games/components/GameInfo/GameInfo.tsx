@@ -1,6 +1,6 @@
 import React from 'react'
 import { Typography, Flex } from 'antd'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 import GameLogo from '../GameLogo'
 
 interface GameInfoProps {
@@ -9,7 +9,7 @@ interface GameInfoProps {
 
 const GameInfo: React.FC<GameInfoProps> = ({ game }) => {
   return (
-    <Flex vertical justify="center" align="center" className="text-center items-center">
+    <Flex vertical justify="center" align="center" className="text-center items-center w-full">
       <GameLogo logo={game?.logo || ''} />
       <Typography.Title>{game.name}</Typography.Title>
       <Typography.Paragraph>{game.description}</Typography.Paragraph>

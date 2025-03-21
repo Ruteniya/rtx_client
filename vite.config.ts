@@ -5,6 +5,7 @@ import path from 'node:path'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: './',
   resolve: {
     alias: Object.fromEntries(
       ['api', 'app', 'features', 'hooks', 'utils', 'services'].map((dir) => [

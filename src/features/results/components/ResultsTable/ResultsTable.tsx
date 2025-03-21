@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Flex, Table, Typography } from 'antd'
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 import { ColumnType } from 'antd/es/table'
 import Papa from 'papaparse'
 

@@ -1,4 +1,4 @@
-import { Pto } from '@rtx/types'
+import { Pto } from 'rtxtypes'
 import { apiSlice } from './api-slice'
 
 export const groupsApi = apiSlice.injectEndpoints({
