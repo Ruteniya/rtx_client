@@ -5,7 +5,7 @@ import { Pto } from 'rtxtypes'
 const pageKey: keyof Pto.App.Pagination = 'page'
 const sizeKey: keyof Pto.App.Pagination = 'size'
 
-export const usePagination = (defaultSize: number = 10) => {
+export const usePagination = (defaultSize: number = 5) => {
   const { getParam, setParam, setParams } = useQueryParams()
   const [page, setPage] = useState(Number(getParam(pageKey) || 1))
   const [size, setSize] = useState(Number(getParam(sizeKey) || defaultSize))

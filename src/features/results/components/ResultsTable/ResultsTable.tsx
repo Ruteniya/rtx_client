@@ -6,7 +6,7 @@ import Papa from 'papaparse'
 
 interface Props {
   results: Pto.Results.ResultPopulated[]
-  nodes: Pto.Nodes.Node[]
+  nodes: Pto.Nodes.NodeSmall[]
 }
 
 const ResultsTable: React.FC<Props> = ({ results, nodes }) => {

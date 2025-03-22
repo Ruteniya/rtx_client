@@ -49,6 +49,11 @@ const ManageNodesModal = ({
     }
   }
 
+  const onCancel = () => {
+    closeModal()
+    form.resetFields()
+  }
+
   const handleAnswerTypeChange = (value: Pto.Nodes.AnswerType) => {
     if (value && correctAnswer) form.setFieldValue('correctAnswer', '')
   }
@@ -58,7 +63,7 @@ const ManageNodesModal = ({
       key={isEditMode ? `edit-${nodeData?.id}-node` : 'create-node'}
       title={isEditMode ? 'Редагувати точку' : 'Додати точку'}
       open={isVisible}
-      onCancel={closeModal}
+      onCancel={onCancel}
       onOk={handleSubmit}
       confirmLoading={isCreating || isUpdating}
       okText={isEditMode ? 'Готово' : 'Додати'}

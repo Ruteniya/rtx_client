@@ -17,6 +17,20 @@ export const nodesApi = apiSlice.injectEndpoints({
       }),
       providesTags: ['Nodes']
     }),
+    getSmallNodes: builder.query<Pto.Nodes.NodeSmallList, void>({
+      query: () => ({
+        url: 'nodes/small',
+        method: 'GET'
+      }),
+      providesTags: ['SmallNodes', 'Nodes']
+    }),
+    getShortNode: builder.query<Pto.Nodes.ShortNode, { id: string }>({
+      query: ({ id }) => ({
+        url: `nodes/short/${id}`,
+        method: 'GET'
+      }),
+      providesTags: (_, __, { id }) => [{ type: 'Nodes', id }]
+    }),
     getNode: builder.query<Pto.Nodes.Node, { id: string }>({
       query: ({ id }) => ({
         url: `nodes/${id}`,
@@ -30,7 +44,7 @@ export const nodesApi = apiSlice.injectEndpoints({
         method: 'POST',
         body: createNodeDto
       }),
-      invalidatesTags: ['Nodes']
+      invalidatesTags: ['Nodes', 'SmallNodes']
     }),
     updateNode: builder.mutation<Pto.Nodes.Node, { id: string; updateNodeDto: Pto.Nodes.UpdateNode }>({
       query: ({ id, updateNodeDto }) => ({
@@ -38,22 +52,28 @@ export const nodesApi = apiSlice.injectEndpoints({
         method: 'PATCH',
         body: updateNodeDto
       }),
-      invalidatesTags: ['Nodes']
+      invalidatesTags: ['Nodes', 'SmallNodes']
     }),
     deleteNode: builder.mutation<void, { id: string }>({
       query: ({ id }) => ({
         url: `nodes/${id}`,
         method: 'DELETE'
       }),
-      invalidatesTags: ['Nodes']
+      invalidatesTags: ['Nodes', 'SmallNodes']
     })
   })
 })
 
 export const {
   useGetNodesQuery,
+
   useGetShortNodesQuery,
+  useGetShortNodeQuery,
+
+  useGetSmallNodesQuery,
+
   useGetNodeQuery,
+  useLazyGetNodeQuery,
   useCreateNodeMutation,
   useUpdateNodeMutation,
   useDeleteNodeMutation

@@ -3,14 +3,15 @@ import { Pto } from 'rtxtypes'
 import { DeleteOutlined, EditOutlined, MoreOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import useModal from '@hooks/useModal'
-import { useDeleteNodeMutation, useGetNodesQuery } from '@api/api-nodes'
+import { useDeleteNodeMutation, useGetSmallNodesQuery, useLazyGetNodeQuery } from '@api/api-nodes'
 import ManageNodesModal from '../ManageNodesModal'
 
 const NodesTable = () => {
-  const { data, isLoading } = useGetNodesQuery()
+  const { data, isLoading } = useGetSmallNodesQuery()
   const [deleteNode] = useDeleteNodeMutation()
   const { openModal: openEditModal, isVisible: isEditModalVisible, closeModal: closeEditModal } = useModal()
   const [currentNode, setCurrentNode] = useState<Pto.Nodes.Node>()
+  const [getNode] = useLazyGetNodeQuery()
 
   const nodes = data?.items
 
@@ -26,9 +27,14 @@ const NodesTable = () => {
     })
   }
 
-  const handleEdit = (record: Pto.Nodes.Node) => {
-    setCurrentNode(record)
-    openEditModal()
+  const handleEdit = async (record: Pto.Nodes.NodeSmall) => {
+    await getNode({ id: record.id })
+      .unwrap()
+      .then((result: Pto.Nodes.Node) => {
+        setCurrentNode(result)
+        openEditModal()
+      })
+      .catch()
   }
 
   const columns = [

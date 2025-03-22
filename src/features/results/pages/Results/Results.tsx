@@ -1,4 +1,4 @@
-import { useGetNodesQuery } from '@api/api-nodes'
+import { useGetSmallNodesQuery } from '@api/api-nodes'
 import { useGenerateResultsMutation, useGetResultsQuery } from '@api/api-results'
 import { ResultsTable } from '@features/results/components'
 import { Button, Divider, Flex, message, Typography } from 'antd'
@@ -6,7 +6,7 @@ import { Button, Divider, Flex, message, Typography } from 'antd'
 const Results = () => {
   const [generateResults] = useGenerateResultsMutation()
   const { data: results } = useGetResultsQuery()
-  const { data: nodesData } = useGetNodesQuery()
+  const { data: nodesData } = useGetSmallNodesQuery()
   const handleGenerateResults = async () => {
     await generateResults()
       .unwrap()

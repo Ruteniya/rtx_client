@@ -11,6 +11,13 @@ export const answersApi = apiSlice.injectEndpoints({
       }),
       providesTags: ['Answers']
     }),
+    getSmallAnswers: builder.query<Pto.Answers.AnswersSmallList, void>({
+      query: () => ({
+        url: `answers/small`,
+        method: 'GET'
+      }),
+      providesTags: ['SmallAnswers']
+    }),
     getAllAnswers: builder.query<Pto.Answers.AnswersList, Pto.Answers.AnswerListQuery>({
       query: (params) => {
         const queryParams = getQueryParamString({ ...params })
@@ -21,13 +28,22 @@ export const answersApi = apiSlice.injectEndpoints({
       },
       providesTags: ['Answers']
     }),
-    giveAnswer: builder.mutation<void, Pto.Answers.AddAnswer>({
+    getAnswer: builder.query<Pto.Answers.Answer, { id: string }>({
+      query: ({ id }) => ({
+        url: `answers/full/${id}`,
+        method: 'GET'
+      }),
+      providesTags: (_, __, { id }) => [{ type: 'Answers', id }]
+    }),
+    giveAnswer: builder.mutation<Pto.Answers.AnswerSmall, Pto.Answers.AddAnswer>({
       query: (body) => ({
         url: `answers`,
         method: 'POST',
         body
       }),
-      invalidatesTags: ['Answers']
+      invalidatesTags: (result, _) => {
+        return result ? [{ type: 'Answers', id: result.id }, 'SmallAnswers'] : ['Answers', 'SmallAnswers']
+      }
     }),
     evaluateAnswers: builder.mutation<void, Pto.Answers.EvaluateAnswer[]>({
       query: (body) => ({
@@ -35,10 +51,16 @@ export const answersApi = apiSlice.injectEndpoints({
         method: 'PATCH',
         body
       }),
-      invalidatesTags: ['Answers']
+      invalidatesTags: ['Answers', 'SmallAnswers']
     })
   })
 })
 
-export const { useGetAnswersQuery, useGetAllAnswersQuery, useGiveAnswerMutation, useEvaluateAnswersMutation } =
-  answersApi
+export const {
+  useGetAnswersQuery,
+  useGetSmallAnswersQuery,
+  useGetAllAnswersQuery,
+  useGiveAnswerMutation,
+  useGetAnswerQuery,
+  useEvaluateAnswersMutation
+} = answersApi

@@ -8,7 +8,7 @@ const About = () => {
   return (
     <Flex vertical align="center" className="h-full">
       {game ? (
-        <Card title="Поточна гра" className="w-[70%] max-w-[600px]">
+        <Card title="Поточна гра" className=" w-full max-w-[600px]">
           <GameInfo game={game} />
         </Card>
       ) : (

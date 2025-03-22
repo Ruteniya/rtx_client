@@ -1,12 +1,14 @@
-import { Pto } from 'rtxtypes'
-import { Flex } from 'antd'
+import { Flex, Spin } from 'antd'
 import { Image } from '@features/system/components'
+import { useGetShortNodeQuery } from '@api/api-nodes'
 
 type NodeProps = {
-  node: Pto.Nodes.Node
+  nodeId: string
 }
 
-export default function Node({ node }: NodeProps) {
+export default function Node({ nodeId }: NodeProps) {
+  const { data: node } = useGetShortNodeQuery({ id: nodeId })
+  if (!node) return <Spin />
   return (
     <>
       <p className="text-gray-800">{node.question}</p>

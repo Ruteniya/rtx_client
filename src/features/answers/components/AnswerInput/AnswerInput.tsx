@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Form, Input, Button, Flex, message } from 'antd'
+import { Form, Input, Button, Flex, message, Spin } from 'antd'
 import { Pto } from 'rtxtypes'
 import { ImageUpload } from '@features/system/components'
-import { useGiveAnswerMutation } from '@api/api-answers'
+import { useGetAnswerQuery, useGiveAnswerMutation } from '@api/api-answers'
 
 interface NodeAnswerFormProps {
-  node: Pto.Nodes.ShortNode
-  answer?: Pto.Answers.Answer
+  node: Pto.Nodes.NodeSmall
+  answerId?: string
 }
 
 type FormValues = {
@@ -14,16 +14,20 @@ type FormValues = {
   userComment?: string
 }
 
-const NodeAnswerForm = ({ node, answer }: NodeAnswerFormProps) => {
+const AnswerInput = ({ node, answerId }: NodeAnswerFormProps) => {
   const [form] = Form.useForm()
   const [showComment, setShowComment] = useState(false)
   const [giveAnswer, { isLoading }] = useGiveAnswerMutation()
   const [isFormChanged, setIsFormChanged] = useState(false)
+  const { data: answer, isLoading: isAnswerLoading } = useGetAnswerQuery(
+    { id: answerId as string },
+    { skip: answerId == undefined }
+  )
 
   const onSubmit = async (values: FormValues) => {
     await giveAnswer({ answerValue: values.answerValue, userComment: values.userComment, nodeId: node.id })
       .unwrap()
-      .then(message.success(`Відповідь для точки ${node.name} надіслана`, 20))
+      .then(() => message.success(`Відповідь для точки ${node.name} надіслана`, 20))
       .catch()
   }
 
@@ -36,6 +40,8 @@ const NodeAnswerForm = ({ node, answer }: NodeAnswerFormProps) => {
       form.resetFields()
     }
   }, [answer, form])
+
+  if (isAnswerLoading) return <Spin />
 
   return (
     <Form
@@ -91,4 +97,4 @@ const NodeAnswerForm = ({ node, answer }: NodeAnswerFormProps) => {
   )
 }
 
-export default NodeAnswerForm
+export default AnswerInput

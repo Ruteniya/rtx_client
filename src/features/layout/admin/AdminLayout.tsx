@@ -20,22 +20,12 @@ const { Sider, Content } = Layout
 
 type MenuItem = Required<MenuProps>['items'][number]
 
+const openKeys = ['answers']
+
 const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation()
   const game = useAppSelector((state) => state.user.game)
   const [collapsed, setCollapsed] = useState(true)
-
-  const rootSubmenuKeys = ['answers']
-  const [openKeysState, setOpenKeysState] = useState(['answers'])
-
-  const onOpenChange = (openKeys: string[]) => {
-    const latestOpenKey = openKeys.find((key) => openKeysState.indexOf(key) === -1)
-    if (rootSubmenuKeys.indexOf(latestOpenKey as string) === -1) {
-      setOpenKeysState(openKeys)
-    } else {
-      setOpenKeysState(latestOpenKey ? [latestOpenKey] : [])
-    }
-  }
 
   const menuItems: MenuItem[] = [
     {
@@ -97,8 +87,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <Flex vertical justify="space-between" className="h-full bg-white">
       <Menu
         selectedKeys={[location.pathname]}
-        openKeys={openKeysState}
-        onOpenChange={onOpenChange}
+        openKeys={openKeys}
         className="!mt-2"
         mode="inline"
         items={menuItems}

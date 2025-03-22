@@ -1,18 +1,19 @@
-import { useGetShortNodesQuery } from '@api/api-nodes'
+import { useGetSmallNodesQuery } from '@api/api-nodes'
 import { Card, Divider, Flex, Spin, Tabs, Tag } from 'antd'
 import Node from '../Node/Node'
-import { useGetAnswersQuery } from '@api/api-answers'
+import { useGetSmallAnswersQuery } from '@api/api-answers'
 import { Pto } from 'rtxtypes'
 import { ReactNode } from 'react'
 import { CheckCircleOutlined, CloseCircleOutlined, SyncOutlined } from '@ant-design/icons'
 import { AnswerInput } from '@features/answers/components'
 
 const NodesTabs = () => {
-  const { data, isLoading: isNodesLoading } = useGetShortNodesQuery()
-  const { data: answers } = useGetAnswersQuery()
-  const nodes = data?.items || []
+  const { data: smallNodesData, isLoading: isNodesLoading } = useGetSmallNodesQuery()
+  const { data: answersData } = useGetSmallAnswersQuery()
+  const nodes = smallNodesData?.items || []
+  const answers = answersData?.items || []
 
-  const getTagConfig = (answer?: Pto.Answers.Answer): { text: string; color: string; icon?: ReactNode } => {
+  const getTagConfig = (answer?: Pto.Answers.AnswerSmall): { text: string; color: string; icon?: ReactNode } => {
     if (!answer) {
       return { text: 'Не здано', color: 'default' }
     }
@@ -28,7 +29,7 @@ const NodesTabs = () => {
     return { text: 'Не зараховано', color: 'volcano', icon: <CloseCircleOutlined /> }
   }
 
-  const getTag = (answer?: Pto.Answers.Answer, withText = true): ReactNode => {
+  const getTag = (answer?: Pto.Answers.AnswerSmall, withText = true): ReactNode => {
     const config = getTagConfig(answer)
     return (
       <Tag color={config.color} icon={config.icon} className="max-h-fit">
@@ -48,7 +49,7 @@ const NodesTabs = () => {
       className="nodes-tabs"
       tabPosition="left"
       onChange={scrollToTop}
-      items={nodes.map((node) => {
+      items={nodes.map((node: Pto.Nodes.NodeSmall) => {
         const answer = answers?.find((answer) => answer.nodeId === node.id)
 
         return {
@@ -70,10 +71,10 @@ const NodesTabs = () => {
                 </Flex>
               }
             >
-              <Node node={node} />
+              <Node nodeId={node.id} />
 
               <Divider />
-              <AnswerInput node={node} answer={answer} />
+              <AnswerInput node={node} answerId={answer?.id || undefined} />
             </Card>
           )
         }
