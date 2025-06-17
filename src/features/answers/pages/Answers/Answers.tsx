@@ -16,6 +16,11 @@ enum PaginationKeys {
 
 const pageKey: keyof Pto.App.Pagination = 'page'
 
+const getBooleanValue = (value?: string | null) => {
+  if (!value || !['true', 'false'].includes(value)) return undefined
+  return value === 'true'
+}
+
 const Answers = ({ processed }: { processed?: boolean }) => {
   const { page, size, onPageSizeChange } = usePagination()
   const { getParamArray, setParams, getParam } = useQueryParams()
@@ -23,7 +28,7 @@ const Answers = ({ processed }: { processed?: boolean }) => {
   const filters: AnswersFilters = useMemo(
     () => ({
       searchText: (getParam(PaginationKeys.Search) as AnswersFilters['searchText']) || undefined,
-      correct: (Boolean(getParam(PaginationKeys.Correct)) as AnswersFilters['correct']) || undefined,
+      correct: (getBooleanValue(getParam(PaginationKeys.Correct)) as AnswersFilters['correct']) || undefined,
       groupIds: (getParamArray(PaginationKeys.GroupIds) as AnswersFilters['groupIds']) || undefined
     }),
     [
@@ -84,6 +89,21 @@ const Answers = ({ processed }: { processed?: boolean }) => {
               value: group.id // ID групи
             }))}
           />
+          {processed ? (
+            <Select
+              allowClear
+              placeholder="Оцінка відповіді"
+              defaultValue={filters?.correct || undefined}
+              onChange={(value?: boolean) => {
+                console.log('value: ', value)
+                handleFiltersChange({ ...filters, correct: value })
+              }}
+              options={[
+                { label: 'Правильні', value: true },
+                { label: 'Неправильні', value: false }
+              ]}
+            />
+          ) : undefined}
         </Flex>
       </Flex>
       <Flex justify="center">

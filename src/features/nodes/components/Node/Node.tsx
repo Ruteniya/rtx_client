@@ -16,7 +16,7 @@ export default function Node({ nodeId }: NodeProps) {
 
       {node.questionImage ? (
         <Flex className="!m-2">
-          <Image src={node.questionImage} imageSize={'90%'} expandable={true} />
+          <Image src={node.questionImage} imageSize={'min(90%, 500px)'} expandable={true} />
         </Flex>
       ) : undefined}
     </>
