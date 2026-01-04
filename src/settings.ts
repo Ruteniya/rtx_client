@@ -1,7 +1,3 @@
-// export const settings = {
-//   backendUrl: 'http://localhost:4496'
-// }
-
 const mode = (import.meta as any).env.MODE
 
 const env = {
@@ -11,12 +7,12 @@ const env = {
 
 const backendHosts: { [k: string]: string } = {
   development: 'http://localhost:4496',
-  production: 'https://rtx.pandeiasoft.com'
+  production: 'https://rtxserver-production.up.railway.app'
 }
 
 const frontendHosts: { [k: string]: string } = {
   development: 'http://localhost:4496',
-  production: 'https://rtx.pandeiasoft.com'
+  production: 'https://rtxserver-production.up.railway.app'
 }
 
 export const settings = {
