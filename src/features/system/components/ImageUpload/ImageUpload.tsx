@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Image from '../Image/Image'
 
 interface ImageUploadProps {
-  onUpload: (result: string | ArrayBuffer | null) => void
+  onUpload: (file: File | null) => void
   initialValue?: string
   showImage?: boolean
   imageSize?: string | number
@@ -16,21 +16,22 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   imageSize = 150,
   initialValue = null
 }) => {
-  const [imageSrc, setImageSrc] = useState<string | ArrayBuffer | null>(initialValue)
+  const [preview, setPreview] = useState<string | null>(initialValue)
 
   const handleUpload = (file: File): boolean => {
+    onUpload(file)
+
     const reader = new FileReader()
     reader.onload = () => {
-      const result = reader.result
-      setImageSrc(result)
-      onUpload(result)
+      setPreview(reader.result as string)
     }
     reader.readAsDataURL(file)
-    return false // Запобігає стандартній поведінці завантаження
+
+    return false
   }
 
   const handleRemove = () => {
-    setImageSrc(null)
+    setPreview(null)
     onUpload(null)
   }
 
@@ -41,9 +42,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           Завантажити зображення
         </Button>
       </Upload>
-      {showImage && imageSrc && (
+
+      {showImage && preview && (
         <div className="my-2">
-          <Image src={imageSrc as string} alt="Uploaded preview" imageSize={imageSize} expandable={true} />
+          <Image src={preview} alt="Uploaded preview" imageSize={imageSize} expandable={true} />
         </div>
       )}
     </div>
