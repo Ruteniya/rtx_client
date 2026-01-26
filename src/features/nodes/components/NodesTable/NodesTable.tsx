@@ -4,7 +4,7 @@ import { DeleteOutlined, EditOutlined, MoreOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import useModal from '@hooks/useModal'
 import { useDeleteNodeMutation, useGetSmallNodesQuery, useLazyGetNodeQuery } from '@api/api-nodes'
-import ManageNodesModal from '../ManageNodesModal'
+import { ManageNodesModal } from '..'
 
 const NodesTable = () => {
   const { data, isLoading } = useGetSmallNodesQuery()
@@ -21,13 +21,24 @@ const NodesTable = () => {
       onOk: async () => {
         await deleteNode({ id })
           .unwrap()
-          .then(() => message.success('Точку видалено'))
+          .then(() => {
+            if (currentNode?.id === id) {
+              setCurrentNode(undefined)
+              closeEditModal()
+            }
+            message.success('Точку видалено')
+          })
           .catch()
       }
     })
   }
 
   const handleEdit = async (record: Pto.Nodes.NodeSmall) => {
+    const nodeStillExists = nodes?.some((n) => n.id === record.id)
+    if (!nodeStillExists) {
+      message.warning('Ця точка більше не існує')
+      return
+    }
     await getNode({ id: record.id })
       .unwrap()
       .then((result: Pto.Nodes.Node) => {
@@ -97,6 +108,7 @@ const NodesTable = () => {
         loading={isLoading}
         scroll={{ scrollToFirstRowOnChange: true, x: true }}
       />
+
       <ManageNodesModal isVisible={isEditModalVisible} closeModal={closeEditModal} nodeData={currentNode} />
     </>
   )

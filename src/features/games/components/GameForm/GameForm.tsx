@@ -1,9 +1,10 @@
 import React from 'react'
-import { Form, Input, DatePicker, Button, message, Card, Flex, Typography } from 'antd'
+import { Form, Input, DatePicker, Button, message, Card, Flex, Typography, Modal } from 'antd'
 import { Pto } from 'rtxtypes'
-import { useCreateGameMutation, useUpdateGameMutation } from '@api/api-games'
+import { useCreateGameMutation, useDeleteGameMutation, useUpdateGameMutation } from '@api/api-games'
 import dayjs from '@utils/dayjs-config'
 import { ImageUpload } from '@features/system/components'
+import { DeleteOutlined } from '@ant-design/icons'
 
 interface GameFormProps {
   isEditMode: boolean
@@ -16,6 +17,7 @@ const { Title, Text } = Typography
 const GameForm: React.FC<GameFormProps> = ({ isEditMode, initialValues, onSuccess }) => {
   const [createGame] = useCreateGameMutation()
   const [updateGame] = useUpdateGameMutation()
+  const [deleteGame] = useDeleteGameMutation()
   const [form] = Form.useForm()
 
   const [logoFile, setLogoFile] = React.useState<File | null>(null)
@@ -31,7 +33,11 @@ const GameForm: React.FC<GameFormProps> = ({ isEditMode, initialValues, onSucces
 
     try {
       if (isEditMode) {
-        await updateGame({ id: initialValues?.id || '', data: payload }).unwrap()
+        await updateGame({
+          id: initialValues?.id || '',
+          data: payload,
+          options: { deleteLogo: logoFile === null }
+        }).unwrap()
         message.success('Гра оновлена успішно')
       } else {
         await createGame(payload).unwrap()
@@ -44,14 +50,38 @@ const GameForm: React.FC<GameFormProps> = ({ isEditMode, initialValues, onSucces
     }
   }
 
+  const handleDelete = () => {
+    if (!initialValues?.id) return
+    Modal.confirm({
+      title: 'Видалити гру?',
+      content: 'Цю дію неможливо буде відмінити!',
+      okText: 'Видалити',
+      okType: 'danger',
+      cancelText: 'Скасувати',
+      onOk: async () => {
+        try {
+          await deleteGame({ id: initialValues.id }).unwrap()
+          message.success('Гру видалено успішно')
+          onSuccess()
+        } catch {
+          message.error('Сталася помилка при видаленні')
+        }
+      }
+    })
+  }
+
   return (
-    <Card style={{ width: '100%' }}>
+    <Card style={{ width: '100%' }} className="min-w-[280px]">
       <Flex vertical gap={24}>
-        <Flex vertical gap={4}>
-          <Title level={4} style={{ margin: 0 }}>
-            {isEditMode ? 'Редагування гри' : 'Створення нової гри'}
-          </Title>
-          <Text type="secondary">Заповніть основну інформацію про гру</Text>
+        <Flex justify="space-between">
+          <Flex vertical gap={4}>
+            <Title level={4} style={{ margin: 0 }}>
+              {isEditMode ? 'Редагування гри' : 'Створення нової гри'}
+            </Title>
+            <Text type="secondary">Заповніть основну інформацію про гру</Text>
+          </Flex>
+
+          {isEditMode && <Button danger onClick={handleDelete} icon={<DeleteOutlined />} />}
         </Flex>
 
         <Form
@@ -67,10 +97,15 @@ const GameForm: React.FC<GameFormProps> = ({ isEditMode, initialValues, onSucces
           <Form.Item
             name="logo"
             label="Логотип гри"
-            rules={[{ required: !isEditMode, message: 'Завантажте логотип гри' }]}
+            valuePropName="value"
+            getValueFromEvent={(value: File | string | null) => value}
           >
             <Flex justify="center">
-              <ImageUpload initialValue={initialValues?.logo} onUpload={(file: File | null) => setLogoFile(file)} />
+              <ImageUpload
+                initialValue={initialValues?.logo}
+                onUpload={(file: File | null) => setLogoFile(file)}
+                onDelete={() => setLogoFile(null)}
+              />
             </Flex>
           </Form.Item>
 

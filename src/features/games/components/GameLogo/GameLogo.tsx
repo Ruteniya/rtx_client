@@ -6,7 +6,7 @@ interface GameLogoProps {
 }
 
 const GameLogo: React.FC<GameLogoProps> = ({ logo, size = 100 }) => {
-  return <img src={logo} alt="Логотип гри" style={{ width: size, height: size }} />
+  return <img src={logo} alt="Логотип гри" style={{ width: size, height: 'auto' }} />
 }
 
 export default GameLogo

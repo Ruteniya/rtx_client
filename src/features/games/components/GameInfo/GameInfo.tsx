@@ -1,7 +1,7 @@
 import React from 'react'
 import { Typography, Flex } from 'antd'
 import { Pto } from 'rtxtypes'
-import GameLogo from '../GameLogo'
+import { GameLogo } from '..'
 
 interface GameInfoProps {
   game: Pto.Games.Game
@@ -16,7 +16,7 @@ const GameInfo: React.FC<GameInfoProps> = ({ game }) => {
       <strong>Дата початку:</strong>{' '}
       {new Date(game.startDate).toLocaleString('uk-UA', {
         year: 'numeric',
-        month: 'long', // або '2-digit' для числового формату
+        month: 'long',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
@@ -25,7 +25,7 @@ const GameInfo: React.FC<GameInfoProps> = ({ game }) => {
       <strong>Дата закінчення:</strong>{' '}
       {new Date(game.endDate).toLocaleString('uk-UA', {
         year: 'numeric',
-        month: 'long', // або '2-digit' для числового формату
+        month: 'long',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit',

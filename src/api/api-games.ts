@@ -1,5 +1,6 @@
 import { Pto } from 'rtxtypes'
 import { apiSlice } from './api-slice'
+import { getQueryParamString } from '@utils/get-query-param-string'
 
 export const gamesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -26,7 +27,7 @@ export const gamesApi = apiSlice.injectEndpoints({
         }
 
         return {
-          url: '/games',
+          url: 'games',
           method: 'POST',
           body: formData
         }
@@ -34,8 +35,11 @@ export const gamesApi = apiSlice.injectEndpoints({
       invalidatesTags: ['Game']
     }),
 
-    updateGame: builder.mutation<Pto.Games.Game, { id: string; data: Pto.Games.CreateGame & { logo?: File } }>({
-      query: ({ id, data }) => {
+    updateGame: builder.mutation<
+      Pto.Games.Game,
+      { id: string; data: Pto.Games.CreateGame & { logo?: File }; options: Pto.Games.UpdateGameOptions }
+    >({
+      query: ({ id, data, options }) => {
         const formData = new FormData()
 
         formData.append('name', data.name)
@@ -43,19 +47,29 @@ export const gamesApi = apiSlice.injectEndpoints({
         formData.append('startDate', data.startDate.toISOString())
         formData.append('endDate', data.endDate.toISOString())
 
-        if (data.logo) {
+        if (data.logo && typeof data.logo !== 'string') {
           formData.append('logo', data.logo)
         }
 
+        const queryParams = getQueryParamString({ ...options })
+
         return {
-          url: `/games/${id}`,
-          method: 'PATCH',
+          url: `games/${id}?${queryParams}`,
+          method: 'PUT',
           body: formData
         }
       },
+      invalidatesTags: ['Game']
+    }),
+
+    deleteGame: builder.mutation<void, { id: string }>({
+      query: ({ id }) => ({
+        url: `games/${id}`,
+        method: 'DELETE'
+      }),
       invalidatesTags: ['Game']
     })
   })
 })
 
-export const { useGetGameQuery, useCreateGameMutation, useUpdateGameMutation } = gamesApi
+export const { useGetGameQuery, useCreateGameMutation, useUpdateGameMutation, useDeleteGameMutation } = gamesApi

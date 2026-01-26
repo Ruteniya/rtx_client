@@ -1,17 +1,19 @@
-import { Upload, Button } from 'antd'
-import { UploadOutlined } from '@ant-design/icons'
+import { Upload, Button, Flex } from 'antd'
+import { UploadOutlined, DeleteOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import Image from '../Image/Image'
 
 interface ImageUploadProps {
   onUpload: (file: File | null) => void
-  initialValue?: string
+  onDelete?: () => void
+  initialValue?: string | null
   showImage?: boolean
   imageSize?: string | number
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
   onUpload,
+  onDelete,
   showImage = true,
   imageSize = 150,
   initialValue = null
@@ -30,14 +32,15 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     return false
   }
 
-  const handleRemove = () => {
+  const handleDelete = () => {
     setPreview(null)
     onUpload(null)
+    onDelete?.()
   }
 
   return (
     <div>
-      <Upload beforeUpload={handleUpload} showUploadList={true} accept="image/*" onRemove={handleRemove} maxCount={1}>
+      <Upload beforeUpload={handleUpload} showUploadList={false} accept="image/*" maxCount={1}>
         <Button icon={<UploadOutlined />} className="!whitespace-normal !min-h-fit">
           Завантажити зображення
         </Button>
@@ -45,7 +48,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
       {showImage && preview && (
         <div className="my-2">
-          <Image src={preview} alt="Uploaded preview" imageSize={imageSize} expandable={true} />
+          <Flex justify="end">
+            <Button icon={<DeleteOutlined />} onClick={handleDelete} type="link" danger />
+          </Flex>
+
+          <Image src={preview} alt=" Uploaded preview" imageSize={imageSize} expandable={true} />
         </div>
       )}
     </div>
