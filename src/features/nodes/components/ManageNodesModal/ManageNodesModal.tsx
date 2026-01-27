@@ -80,6 +80,10 @@ const ManageNodesModal = ({
           <Input placeholder="Ex. А1" maxLength={5} />
         </Form.Item>
 
+        <Form.Item name="color" label="Колір" initialValue="#000000">
+          <Input type="color" className="!w-full" />
+        </Form.Item>
+
         <Form.Item name="question" label="Питання" rules={[{ required: true, message: 'Введіть питання' }]}>
           <Input.TextArea placeholder="Ex. Сфотографуйтесь біля цієї будівлі" />
         </Form.Item>

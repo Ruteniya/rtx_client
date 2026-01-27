@@ -18,11 +18,14 @@ export const nodesApi = apiSlice.injectEndpoints({
       }),
       providesTags: ['Nodes']
     }),
-    getSmallNodes: builder.query<Pto.Nodes.NodeSmallList, void>({
-      query: () => ({
-        url: 'nodes/small',
-        method: 'GET'
-      }),
+    getSmallNodes: builder.query<Pto.Nodes.NodeSmallList, Pto.Nodes.NodesListQuery>({
+      query: (params) => {
+        const queryParams = getQueryParamString({ ...params })
+        return {
+          url: `nodes/small?${queryParams}`,
+          method: 'GET'
+        }
+      },
       providesTags: ['SmallNodes', 'Nodes']
     }),
     getShortNode: builder.query<Pto.Nodes.ShortNode, { id: string }>({
@@ -51,6 +54,7 @@ export const nodesApi = apiSlice.injectEndpoints({
         formData.append('answerType', data.answerType)
         formData.append('comment', data.comment ?? '')
         formData.append('adminDescription', data.adminDescription ?? '')
+        if (data.color) formData.append('color', data.color)
 
         if (
           data.answerType === Pto.Nodes.AnswerType.Text &&
@@ -59,7 +63,7 @@ export const nodesApi = apiSlice.injectEndpoints({
           typeof data.correctAnswer === 'string'
         ) {
           formData.append('correctAnswer', data.correctAnswer)
-        } 
+        }
 
         if (data.questionImage && typeof data.questionImage !== 'string') {
           formData.append('files', data.questionImage, 'questionImage')
@@ -99,6 +103,7 @@ export const nodesApi = apiSlice.injectEndpoints({
         if (updateNodeDto.answerType) formData.append('answerType', updateNodeDto.answerType)
         if (updateNodeDto.points) formData.append('points', updateNodeDto.points?.toString() ?? '0')
         if (updateNodeDto.adminDescription) formData.append('adminDescription', updateNodeDto.adminDescription ?? '')
+        if (updateNodeDto.color) formData.append('color', updateNodeDto.color)
 
         if (
           updateNodeDto.answerType === Pto.Nodes.AnswerType.Text &&

@@ -3,6 +3,8 @@ import { useEvaluateAnswersMutation } from '@api/api-answers'
 import { Pto } from 'rtxtypes'
 import { Image } from '@features/system/components'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { AppRoutes } from '@app/app-routes'
 
 export type AnswersFilters = {
   searchText?: string
@@ -16,11 +18,14 @@ interface AnswerTableProps {
   pagination: TablePaginationConfig
 }
 
+const { Text } = Typography
+
 const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, pagination }) => {
   const [selectedAnswers, setSelectedAnswers] = useState<Pto.Answers.EvaluateAnswer[]>([])
   const [evaluateAnswers] = useEvaluateAnswersMutation()
   const [mode, setMode] = useState<'view' | 'evaluation'>('view')
   const [key, setKey] = useState(1)
+  const navigate = useNavigate()
 
   const handleSelectAnswer = (answerId: string, correct: boolean) => {
     setSelectedAnswers((prev) => {
@@ -44,39 +49,86 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
     }
   }
 
+  const getTitle = (text: string): React.ReactNode => (
+    <Tooltip title={text}>
+      <span className="truncate block">{text}</span>
+    </Tooltip>
+  )
+
   const columns = [
     {
-      title: 'Точка',
+      title: getTitle('Точка'),
       dataIndex: ['node', 'name'],
-      key: 'node.name'
+      key: 'node.name',
+      ellipsis: true,
+      render: (text: string, record: Pto.Answers.PopulatedAnswer) => {
+        return (
+          <div className="flex items-center gap-2">
+            {record.node.color && (
+              <Tooltip
+                title={
+                  <div className="flex items-center gap-2">
+                    <span>Колір:</span>
+                    <Text
+                      className="!text-white"
+                      copyable={{
+                        text: record.node.color,
+                        onCopy: () => message.success('Колір скопійовано')
+                      }}
+                    >
+                      {record.node.color}
+                    </Text>
+                  </div>
+                }
+              >
+                <span
+                  className="inline-block h-5 w-5 rounded-full border border-gray-300 cursor-pointer"
+                  style={{ backgroundColor: record.node.color }}
+                />
+              </Tooltip>
+            )}
+
+            <span>{text}</span>
+          </div>
+        )
+      }
       // sorter: true,
       // sortOrder: sortBy === 'node,name' ? 'node.name' : undefined
     },
     {
-      title: 'Питання',
+      title: getTitle('Питання'),
       dataIndex: ['node', 'question'],
       key: 'node.question',
+      ellipsis: true,
       render: (question: string, record: Pto.Answers.PopulatedAnswer) => (
         <>
           <p>{question}</p>
           {record.node.questionImage ? (
             <div className="mt-1">
-              <Image src={record.node.questionImage} alt="Question image" imageSize={'100px'} expandable={true} />
+              <Image
+                src={record.node.questionImage}
+                alt="Question image"
+                imageSize={'100px'}
+                expandable={true}
+                onClick={(e) => e.stopPropagation()}
+              />
             </div>
           ) : undefined}
         </>
       )
     },
     {
-      title: 'Опис',
+      title: getTitle('Опис'),
       dataIndex: ['node', 'adminDescription'],
       key: 'node.adminDescription',
+      ellipsis: true,
       render: (adminDescription: string) => adminDescription || '-'
     },
     {
-      title: 'Категорія',
+      title: getTitle('Категорія'),
       dataIndex: ['group', 'category', 'name'],
       key: 'group.category.name',
+      ellipsis: true,
       render: (name: string, record: Pto.Answers.PopulatedAnswer) => (
         <Tag className="!m-1 font-semibold" color={record.group.category?.color || 'grey'}>
           {name || 'Категорія не вказана'}
@@ -84,29 +136,44 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
       )
     },
     {
-      title: 'Правильна відповідь',
+      title: getTitle('Правильна відповідь'),
       dataIndex: 'correctAnswer',
       key: 'correctAnswer',
+      ellipsis: true,
       render: (_: any, record: Pto.Answers.PopulatedAnswer) =>
         record.node.answerType === Pto.Nodes.AnswerType.Photo && record.node.correctAnswer ? (
-          <Image src={record.node.correctAnswer} alt="Correct Answer" imageSize={'100px'} expandable={true} />
+          <Image
+            src={record.node.correctAnswer}
+            alt="Correct Answer"
+            imageSize={'100px'}
+            expandable={true}
+            onClick={(e) => e.stopPropagation()}
+          />
         ) : (
           record.node.correctAnswer
         )
     },
     {
-      title: 'Кількість учасників',
+      title: getTitle('Кількість учасників'),
+      ellipsis: true,
       dataIndex: ['group', 'numberOfParticipants'],
       key: 'group.numberOfParticipants'
     },
     {
-      title: 'Відповідь',
+      title: getTitle('Відповідь'),
       dataIndex: 'answerValue',
       key: 'answerValue',
+      ellipsis: true,
       render: (_: any, record: Pto.Answers.PopulatedAnswer) => (
         <>
           {record.node.answerType === Pto.Nodes.AnswerType.Photo ? (
-            <Image src={record.answerValue} alt="Answer" imageSize={'100px'} expandable={true} />
+            <Image
+              src={record.answerValue}
+              alt="Answer"
+              imageSize={'100px'}
+              expandable={true}
+              onClick={(e) => e.stopPropagation()}
+            />
           ) : (
             record.answerValue
           )}
@@ -123,9 +190,10 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
     ...(mode === 'evaluation'
       ? [
           {
-            title: 'Дії',
+            title: getTitle('Дії'),
             dataIndex: 'actions',
             key: 'actions',
+            ellipsis: true,
             render: (_: any, record: Pto.Answers.PopulatedAnswer) => (
               <Flex onClick={(e) => e.stopPropagation()}>
                 <Radio.Group
@@ -188,7 +256,6 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
           ) : undefined}
         </div>
       </Flex>
-      <br />
 
       <Table
         className="answers-table"
@@ -197,15 +264,19 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
         columns={columns}
         rowKey="id"
         loading={isLoading}
-        scroll={{ scrollToFirstRowOnChange: true, x: true }}
+        scroll={{
+          y: '65vh',
+          x: true,
+          scrollToFirstRowOnChange: true
+        }}
         pagination={pagination}
         rowClassName={(record: Pto.Answers.PopulatedAnswer) => {
           if (!record.processed) return ''
           return record.correct ? 'correct-answer' : 'incorrect-answer'
         }}
-        // onRow={(record: Pto.Answers.PopulatedAnswer) => {
-        //   return { onClick: () => navigate(`${AppRoutes.groups}/${record.groupId}`) }
-        // }}
+        onRow={(record: Pto.Answers.PopulatedAnswer) => {
+          return { onClick: () => navigate(`${AppRoutes.groups}/${record.groupId}`) }
+        }}
       />
     </Flex>
   )

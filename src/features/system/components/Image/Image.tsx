@@ -6,9 +6,10 @@ interface ImageProps {
   imageSize?: string | number
   alt?: string
   expandable?: boolean
+  onClick?: (e: React.MouseEvent<HTMLImageElement>) => void
 }
 
-const Image: React.FC<ImageProps> = ({ src, imageSize = 150, alt = 'image', expandable = false }) => {
+const Image: React.FC<ImageProps> = ({ src, imageSize = 150, alt = 'image', expandable = false, onClick }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleOpen = (e: React.MouseEvent<HTMLImageElement>) => {
@@ -17,7 +18,7 @@ const Image: React.FC<ImageProps> = ({ src, imageSize = 150, alt = 'image', expa
   }
 
   return (
-    <>
+    <div onClick={onClick}>
       <img
         src={src}
         alt={alt}
@@ -32,7 +33,7 @@ const Image: React.FC<ImageProps> = ({ src, imageSize = 150, alt = 'image', expa
           </Flex>
         </Modal>
       )}
-    </>
+    </div>
   )
 }
 

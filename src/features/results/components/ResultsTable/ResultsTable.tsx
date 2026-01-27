@@ -45,7 +45,15 @@ const ResultsTable: React.FC<Props> = ({ results, nodes }) => {
       sorter: (a, b) => a.categoryName.localeCompare(b.categoryName)
     },
     ...nodes?.map((node: Pto.Nodes.Node) => ({
-      title: node.name,
+      title: (
+        <>
+          <span
+            className="inline-block h-3 w-3 rounded-full border border-gray-300 cursor-pointer mr-1"
+            style={{ backgroundColor: node.color }}
+          />
+          <span>{node.name}</span>
+        </>
+      ),
       dataIndex: node.id,
       key: node.id
     })),

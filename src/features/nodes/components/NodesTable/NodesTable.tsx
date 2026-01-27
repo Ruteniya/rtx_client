@@ -1,19 +1,24 @@
-import { Button, Dropdown, message, Modal, Table } from 'antd'
+import { Button, Dropdown, message, Modal, Table, TablePaginationConfig, Tooltip, Typography } from 'antd'
 import { Pto } from 'rtxtypes'
 import { DeleteOutlined, EditOutlined, MoreOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import useModal from '@hooks/useModal'
-import { useDeleteNodeMutation, useGetSmallNodesQuery, useLazyGetNodeQuery } from '@api/api-nodes'
+import { useDeleteNodeMutation, useLazyGetNodeQuery } from '@api/api-nodes'
 import { ManageNodesModal } from '..'
 
-const NodesTable = () => {
-  const { data, isLoading } = useGetSmallNodesQuery()
+interface NodesTableProps {
+  nodes: Pto.Nodes.NodeSmall[]
+  isLoading?: boolean
+  pagination?: TablePaginationConfig
+}
+
+const { Text } = Typography
+
+const NodesTable: React.FC<NodesTableProps> = ({ nodes, isLoading, pagination }) => {
   const [deleteNode] = useDeleteNodeMutation()
   const { openModal: openEditModal, isVisible: isEditModalVisible, closeModal: closeEditModal } = useModal()
   const [currentNode, setCurrentNode] = useState<Pto.Nodes.Node>()
   const [getNode] = useLazyGetNodeQuery()
-
-  const nodes = data?.items
 
   const handleDelete = (id: string) => {
     Modal.confirm({
@@ -52,7 +57,38 @@ const NodesTable = () => {
     {
       title: 'Назва точки',
       dataIndex: 'name',
-      key: 'name'
+      key: 'name',
+      render: (text: string, record: any) => {
+        return (
+          <div className="flex items-center gap-2">
+            {record.color && (
+              <Tooltip
+                title={
+                  <div className="flex items-center gap-2">
+                    <span>Колір:</span>
+                    <Text
+                      className="!text-white"
+                      copyable={{
+                        text: record.color,
+                        onCopy: () => message.success('Колір скопійовано')
+                      }}
+                    >
+                      {record.color}
+                    </Text>
+                  </div>
+                }
+              >
+                <span
+                  className="inline-block h-3 w-3 rounded-full border border-gray-300 cursor-pointer"
+                  style={{ backgroundColor: record.color }}
+                />
+              </Tooltip>
+            )}
+
+            <span>{text}</span>
+          </div>
+        )
+      }
     },
     {
       title: 'Тип відповіді',
@@ -104,6 +140,7 @@ const NodesTable = () => {
         className="!max-w-[850px] min-w-fit sm:min-w-[80%]"
         dataSource={nodes || []}
         columns={columns}
+        pagination={pagination}
         rowKey="id"
         loading={isLoading}
         scroll={{ scrollToFirstRowOnChange: true, x: true }}

@@ -106,7 +106,7 @@ const Answers = ({ processed }: { processed?: boolean }) => {
           ) : undefined}
         </Flex>
       </Flex>
-      <Flex justify="center">
+      <Flex justify="center" className="lg:!-mt-10">
         <AnswersTable
           isLoading={isAnswersLoading}
           answers={answers}

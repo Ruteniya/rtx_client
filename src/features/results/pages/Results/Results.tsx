@@ -6,7 +6,7 @@ import { Button, Divider, Flex, message, Typography } from 'antd'
 const Results = () => {
   const [generateResults] = useGenerateResultsMutation()
   const { data: results } = useGetResultsQuery()
-  const { data: nodesData } = useGetSmallNodesQuery()
+  const { data: nodesData } = useGetSmallNodesQuery({ page: 1, size: 1000 })
   const handleGenerateResults = async () => {
     await generateResults()
       .unwrap()
@@ -19,7 +19,7 @@ const Results = () => {
         <Button onClick={handleGenerateResults}>Генерувати результат</Button>
       </Flex>
 
-      <Typography.Title level={4}>Проміжні результи</Typography.Title>
+      <Typography.Title level={4}>Проміжні результати</Typography.Title>
       <Divider />
 
       <Flex justify="center" vertical className="overflow-auto">

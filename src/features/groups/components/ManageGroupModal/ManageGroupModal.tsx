@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Select } from 'antd'
+import { Modal, Form, Input, Select, Typography, message, Divider } from 'antd'
 import { useEffect } from 'react'
 import { useCreateGroupMutation, useUpdateGroupMutation } from '@api/groups-api'
 import { useGetCategoriesQuery } from '@api/api-categories'
@@ -85,6 +85,26 @@ const ManageGroupsModal = ({
             ))}
           </Select>
         </Form.Item>
+
+        {isEditMode && groupData && (
+          <>
+            <Divider />
+            <Form.Item name="id" label="Код команди">
+              <Input
+                readOnly
+                value={form.getFieldValue('id')}
+                addonAfter={
+                  <Typography.Text
+                    copyable={{
+                      text: groupData.id,
+                      onCopy: () => message.success('Код скопійовано')
+                    }}
+                  ></Typography.Text>
+                }
+              />
+            </Form.Item>
+          </>
+        )}
       </Form>
     </Modal>
   )

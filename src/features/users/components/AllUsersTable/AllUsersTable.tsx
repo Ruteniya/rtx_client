@@ -23,7 +23,7 @@ const AllUsersTable = () => {
     () => ({
       searchText: (getParam(PaginationKeys.Search) as AnswersFilters['searchText']) || undefined
     }),
-    [getParamArray('searchText'), getParamArray('processed'), getParam('correct')]
+    [getParam('searchText'), getParam('processed'), getParam('correct')]
   )
   const { data, isLoading } = useGetAllUsersQuery({ page, size, ...filters })
 
