@@ -14,5 +14,8 @@ export default defineConfig({
       ])
     )
   },
+  optimizeDeps: {
+    include: ['rtxtypes']
+  },
   plugins: [react(), tailwindcss()]
 })

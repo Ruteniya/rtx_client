@@ -36,15 +36,38 @@ export const answersApi = apiSlice.injectEndpoints({
       providesTags: (_, __, { id }) => [{ type: 'Answers', id }]
     }),
     giveAnswer: builder.mutation<Pto.Answers.AnswerSmall, Pto.Answers.AddAnswer>({
-      query: (body) => ({
-        url: `answers`,
-        method: 'POST',
-        body
-      }),
-      invalidatesTags: (result, _) => {
-        return result ? [{ type: 'Answers', id: result.id }, 'SmallAnswers'] : ['Answers', 'SmallAnswers']
-      }
+      query: (body) => {
+        if (typeof File !== 'undefined' && body.answerValue && typeof body.answerValue !== 'string') {
+          const formData = new FormData()
+
+          // text fields
+          Object.entries(body).forEach(([key, value]) => {
+            if (key === 'answerValue') return
+            if (value !== undefined && value !== null) {
+              formData.append(key, String(value))
+            }
+          })
+
+          formData.append('answerFile', body.answerValue)
+
+          return {
+            url: 'answers',
+            method: 'POST',
+            body: formData
+          }
+        }
+
+        return {
+          url: 'answers',
+          method: 'POST',
+          body
+        }
+      },
+
+      invalidatesTags: (result) =>
+        result ? [{ type: 'Answers', id: result.id }, 'SmallAnswers'] : ['Answers', 'SmallAnswers']
     }),
+
     evaluateAnswers: builder.mutation<void, Pto.Answers.EvaluateAnswer[]>({
       query: (body) => ({
         url: `answers/evaluate`,

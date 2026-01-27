@@ -76,7 +76,7 @@ const Answers = ({ processed }: { processed?: boolean }) => {
             key={filters.groupIds?.toString()}
             mode="multiple"
             allowClear
-            placeholder="Виберіть групи"
+            placeholder="Команди"
             className="overflow-auto w-auto"
             loading={isGroupsLoading}
             defaultValue={filters?.groupIds || []}

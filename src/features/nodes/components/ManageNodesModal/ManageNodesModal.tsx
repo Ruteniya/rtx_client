@@ -60,7 +60,8 @@ const ManageNodesModal = ({
   }
 
   const handleAnswerTypeChange = (value: Pto.Nodes.AnswerType) => {
-    if (value) form.setFieldValue('correctAnswer', '')
+    if (value === Pto.Nodes.AnswerType.Text) form.setFieldValue('correctAnswer', null)
+    if (value === Pto.Nodes.AnswerType.Photo) form.setFieldValue('correctAnswer', '')
   }
 
   return (

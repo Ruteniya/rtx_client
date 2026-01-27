@@ -67,7 +67,7 @@ const AnswerInput = ({ node, answerId }: NodeAnswerFormProps) => {
         >
           <ImageUpload
             initialValue={answer?.answerValue}
-            onUpload={(result: string | ArrayBuffer | null) => {
+            onUpload={(result: File | null) => {
               form.setFieldValue('answerValue', result)
               setIsFormChanged(true)
             }}
