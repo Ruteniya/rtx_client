@@ -1,25 +1,16 @@
-import { Flex, Input, Select } from 'antd'
-import { AnswersTable } from '@features/answers/components'
+import { Divider, Flex, Typography } from 'antd'
+import { AnswersFiltersBar, AnswersTable } from '@features/answers/components'
 import { useGetAllAnswersQuery } from '@api/api-answers'
 import { useGetGroupsQuery } from '@api/groups-api'
-import { AnswersFilters } from '@features/answers/components/AnswersTable/AnswersTable'
 import { usePagination } from '@hooks/usePagination'
 import { useQueryParams, ARRAY_DELIMITER } from '@hooks/useQueryParam'
 import { Pto } from 'rtxtypes'
 import { useMemo } from 'react'
-
-enum PaginationKeys {
-  Search = 'searchText',
-  Correct = 'correct',
-  GroupIds = 'groupIds'
-}
+import { useGetSmallNodesQuery } from '@api/api-nodes'
+import { AnswersFilters, PaginationKeys } from '@features/answers/types'
+import { getBooleanValue } from '@utils/get-boolean-value'
 
 const pageKey: keyof Pto.App.Pagination = 'page'
-
-const getBooleanValue = (value?: string | null) => {
-  if (!value || !['true', 'false'].includes(value)) return undefined
-  return value === 'true'
-}
 
 const Answers = ({ processed }: { processed?: boolean }) => {
   const { page, size, onPageSizeChange } = usePagination()
@@ -28,13 +19,15 @@ const Answers = ({ processed }: { processed?: boolean }) => {
   const filters: AnswersFilters = useMemo(
     () => ({
       searchText: (getParam(PaginationKeys.Search) as AnswersFilters['searchText']) || undefined,
-      correct: (getBooleanValue(getParam(PaginationKeys.Correct)) as AnswersFilters['correct']) || undefined,
-      groupIds: (getParamArray(PaginationKeys.GroupIds) as AnswersFilters['groupIds']) || undefined
+      correct: getBooleanValue(getParam(PaginationKeys.Correct)) as AnswersFilters['correct'],
+      groupIds: (getParamArray(PaginationKeys.GroupIds) as AnswersFilters['groupIds']) || undefined,
+      nodeIds: (getParamArray(PaginationKeys.NodeIds) as AnswersFilters['nodeIds']) || undefined
     }),
     [
       getParam(PaginationKeys.Search),
       getParamArray(PaginationKeys.GroupIds),
       getParam(PaginationKeys.Correct),
+      getParamArray(PaginationKeys.NodeIds),
       processed
     ]
   )
@@ -46,66 +39,40 @@ const Answers = ({ processed }: { processed?: boolean }) => {
     ...filters
   })
   const { data: groupsData, isLoading: isGroupsLoading } = useGetGroupsQuery()
-  const groups = groupsData?.items
+  const { data: nodesData, isLoading: isNodesLoading } = useGetSmallNodesQuery()
+
   const answers = answersData?.items || []
+  const groups = groupsData?.items || []
+  const nodes = nodesData?.items || []
 
   const handleFiltersChange = (newFilters: AnswersFilters) => {
     Object.entries(newFilters).forEach(([key, value]) => {
       const currentParam = Array.isArray(value) ? getParamArray(key) : getParam(key)
       if (currentParam?.toString() !== value?.toString()) {
-        setParams({ [pageKey]: '1', [key]: Array.isArray(value) ? value.join(ARRAY_DELIMITER) : value.toString() })
+        setParams({
+          [pageKey]: '1',
+          [key]: Array.isArray(value) ? value.join(ARRAY_DELIMITER) : value?.toString() || ''
+        })
       }
     })
   }
 
   return (
     <div>
-      <Flex gap={15} align="center" wrap="wrap" justify="space-between">
-        <Flex gap={2} wrap>
-          <Input.Search
-            key={filters.searchText?.toString()}
-            defaultValue={getParam(PaginationKeys.Search) || ''}
-            placeholder={'Шукати відповідь'}
-            allowClear
-            onSearch={(value) => handleFiltersChange({ ...filters, searchText: value })}
-            style={{ width: 250 }}
-            className="[&_.ant-input-search-button]:!w-[42px]"
-          />
+      <Typography.Title level={4}>Відповіді</Typography.Title>
+      <Divider />
 
-          <Select
-            key={filters.groupIds?.toString()}
-            mode="multiple"
-            allowClear
-            placeholder="Команди"
-            className="overflow-auto w-auto"
-            loading={isGroupsLoading}
-            defaultValue={filters?.groupIds || []}
-            onChange={(value: string[]) => {
-              handleFiltersChange({ ...filters, groupIds: value })
-            }}
-            style={{ width: 250 }}
-            options={groups?.map((group) => ({
-              label: group.name,
-              value: group.id // ID групи
-            }))}
-          />
-          {processed ? (
-            <Select
-              allowClear
-              placeholder="Оцінка відповіді"
-              defaultValue={filters?.correct || undefined}
-              onChange={(value?: boolean) => {
-                console.log('value: ', value)
-                handleFiltersChange({ ...filters, correct: value })
-              }}
-              options={[
-                { label: 'Правильні', value: true },
-                { label: 'Неправильні', value: false }
-              ]}
-            />
-          ) : undefined}
-        </Flex>
-      </Flex>
+      <AnswersFiltersBar
+        processed={processed}
+        filters={filters}
+        groups={groups}
+        nodes={nodes}
+        isLoading={isGroupsLoading || isNodesLoading}
+        getSearchDefaultValue={getParam(PaginationKeys.Search) || ''}
+        onChange={handleFiltersChange}
+        showCorrectFilter={processed !== false}
+      />
+
       <Flex justify="center" className="lg:!-mt-10">
         <AnswersTable
           isLoading={isAnswersLoading}

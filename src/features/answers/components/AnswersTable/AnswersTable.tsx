@@ -6,12 +6,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AppRoutes } from '@app/app-routes'
 
-export type AnswersFilters = {
-  searchText?: string
-  correct?: boolean
-  groupIds?: string[]
-}
-
 interface AnswerTableProps {
   answers: Pto.Answers.PopulatedAnswer[]
   isLoading: boolean
@@ -234,7 +228,7 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
 
               <div onClick={(e) => e.stopPropagation()}>
                 <Button
-                  className="m-2"
+                  className="m-1"
                   disabled={selectedAnswers.length === 0}
                   onClick={() => {
                     setSelectedAnswers([])
@@ -247,7 +241,7 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
                   type="primary"
                   disabled={selectedAnswers.length === 0}
                   onClick={handleBatchUpdate}
-                  className="m-2 w-fit"
+                  className="m-1 w-fit"
                 >
                   Готово
                 </Button>{' '}

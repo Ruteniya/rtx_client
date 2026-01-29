@@ -7,7 +7,7 @@ import { useMemo } from 'react'
 import { useQueryParams } from '@hooks/useQueryParam'
 import { Pto } from 'rtxtypes'
 
-export type AnswersFilters = {
+export type UsersFilters = {
   searchText?: string
 }
 
@@ -19,15 +19,15 @@ const pageKey: keyof Pto.App.Pagination = 'page'
 const AllUsersTable = () => {
   const { page, size, onPageSizeChange } = usePagination()
   const { getParamArray, setParams, getParam } = useQueryParams()
-  const filters: AnswersFilters = useMemo(
+  const filters: UsersFilters = useMemo(
     () => ({
-      searchText: (getParam(PaginationKeys.Search) as AnswersFilters['searchText']) || undefined
+      searchText: (getParam(PaginationKeys.Search) as UsersFilters['searchText']) || undefined
     }),
     [getParam('searchText'), getParam('processed'), getParam('correct')]
   )
   const { data, isLoading } = useGetAllUsersQuery({ page, size, ...filters })
 
-  const handleFiltersChange = (newFilters: AnswersFilters) => {
+  const handleFiltersChange = (newFilters: UsersFilters) => {
     Object.entries(newFilters).forEach(([key, value]) => {
       const currentParam = Array.isArray(value) ? getParamArray(key) : getParam(key)
       if (currentParam?.toString() !== value.toString()) {

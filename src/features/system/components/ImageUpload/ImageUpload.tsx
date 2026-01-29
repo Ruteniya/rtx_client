@@ -1,6 +1,6 @@
 import { Upload, Button, Flex } from 'antd'
 import { UploadOutlined, DeleteOutlined } from '@ant-design/icons'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from '../Image/Image'
 
 interface ImageUploadProps {
@@ -19,6 +19,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   initialValue = null
 }) => {
   const [preview, setPreview] = useState<string | null>(initialValue)
+
+  useEffect(() => {
+    setPreview(initialValue ?? null)
+  }, [initialValue])
 
   const handleUpload = (file: File): boolean => {
     onUpload(file)

@@ -18,9 +18,9 @@ export const nodesApi = apiSlice.injectEndpoints({
       }),
       providesTags: ['Nodes']
     }),
-    getSmallNodes: builder.query<Pto.Nodes.NodeSmallList, Pto.Nodes.NodesListQuery>({
+    getSmallNodes: builder.query<Pto.Nodes.NodeSmallList, Pto.Nodes.NodesListQuery | void>({
       query: (params) => {
-        const queryParams = getQueryParamString({ ...params })
+        const queryParams = getQueryParamString({ ...(params ?? { page: 1, size: 1000 }) })
         return {
           url: `nodes/small?${queryParams}`,
           method: 'GET'

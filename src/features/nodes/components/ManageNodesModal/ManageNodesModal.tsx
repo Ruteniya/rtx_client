@@ -88,7 +88,7 @@ const ManageNodesModal = ({
           <Input.TextArea placeholder="Ex. Сфотографуйтесь біля цієї будівлі" />
         </Form.Item>
 
-        <Form.Item name="questionImage" label="Зображення (додаток до питання)">
+        <Form.Item name="questionImage" label="Зображення (додаток до питання)" preserve={false}>
           <ImageUpload
             initialValue={nodeData?.questionImage}
             onUpload={(file) => form.setFieldValue('questionImage', file)}
@@ -117,7 +117,7 @@ const ManageNodesModal = ({
         )}
 
         {answerType === Pto.Nodes.AnswerType.Photo && (
-          <Form.Item name="correctAnswer" label="Правильна відповідь (зображення)">
+          <Form.Item name="correctAnswer" label="Правильна відповідь (зображення)" preserve={false}>
             <ImageUpload
               initialValue={nodeData?.correctAnswer}
               onUpload={(file) => form.setFieldValue('correctAnswer', file)}
