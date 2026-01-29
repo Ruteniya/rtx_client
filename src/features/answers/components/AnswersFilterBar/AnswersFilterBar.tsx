@@ -7,7 +7,7 @@ interface Props {
   processed?: boolean
   filters: AnswersFilters
   groups: Pto.Groups.Group[] | null
-  nodes: Pto.Nodes.Node[] | null
+  nodes: Pto.Nodes.NodeSmall[] | null
   isLoading: boolean
   onChange: (filters: AnswersFilters) => void
   getSearchDefaultValue?: string

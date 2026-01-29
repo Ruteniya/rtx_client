@@ -5,6 +5,8 @@ import { useState } from 'react'
 import useModal from '@hooks/useModal'
 import { useDeleteNodeMutation, useLazyGetNodeQuery } from '@api/api-nodes'
 import { ManageNodesModal } from '..'
+import { useGetCategoriesQuery } from '@api/api-categories'
+import { ColumnType } from 'antd/es/table'
 
 interface NodesTableProps {
   nodes: Pto.Nodes.NodeSmall[]
@@ -19,6 +21,8 @@ const NodesTable: React.FC<NodesTableProps> = ({ nodes, isLoading, pagination })
   const { openModal: openEditModal, isVisible: isEditModalVisible, closeModal: closeEditModal } = useModal()
   const [currentNode, setCurrentNode] = useState<Pto.Nodes.Node>()
   const [getNode] = useLazyGetNodeQuery()
+  const { data: categoriesData, isLoading: isCategoriesDataLoading } = useGetCategoriesQuery()
+  const categories = categoriesData?.items || []
 
   const handleDelete = (id: string) => {
     Modal.confirm({
@@ -53,7 +57,7 @@ const NodesTable: React.FC<NodesTableProps> = ({ nodes, isLoading, pagination })
       .catch()
   }
 
-  const columns = [
+  const columns: ColumnType<Pto.Nodes.NodeSmall>[] = [
     {
       title: 'Назва точки',
       dataIndex: 'name',
@@ -108,7 +112,7 @@ const NodesTable: React.FC<NodesTableProps> = ({ nodes, isLoading, pagination })
     {
       title: 'Дії',
       key: 'actions',
-      render: (_: unknown, record: Pto.Nodes.Node) => (
+      render: (_: unknown, record: Pto.Nodes.NodeSmall) => (
         <Dropdown
           menu={{
             items: [
@@ -146,7 +150,13 @@ const NodesTable: React.FC<NodesTableProps> = ({ nodes, isLoading, pagination })
         scroll={{ scrollToFirstRowOnChange: true, x: true }}
       />
 
-      <ManageNodesModal isVisible={isEditModalVisible} closeModal={closeEditModal} nodeData={currentNode} />
+      <ManageNodesModal
+        isVisible={isEditModalVisible}
+        closeModal={closeEditModal}
+        nodeData={currentNode}
+        categories={categories}
+        isLoading={isCategoriesDataLoading}
+      />
     </>
   )
 }

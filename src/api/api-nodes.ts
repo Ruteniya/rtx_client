@@ -49,6 +49,7 @@ export const nodesApi = apiSlice.injectEndpoints({
       query: (data) => {
         const formData = new FormData()
         formData.append('name', data.name)
+        formData.append('categoryIds', data.categoryIds.join(',') ?? '')
         formData.append('question', data.question)
         formData.append('points', data.points?.toString() ?? '0')
         formData.append('answerType', data.answerType)
@@ -98,6 +99,7 @@ export const nodesApi = apiSlice.injectEndpoints({
         const formData = new FormData()
 
         if (updateNodeDto.name) formData.append('name', updateNodeDto.name ?? '')
+        if (updateNodeDto.categoryIds) formData.append('categoryIds', updateNodeDto.categoryIds.join(',') ?? '')
         if (updateNodeDto.question) formData.append('question', updateNodeDto.question ?? '')
         if (updateNodeDto.comment) formData.append('comment', updateNodeDto.comment ?? '')
         if (updateNodeDto.answerType) formData.append('answerType', updateNodeDto.answerType)

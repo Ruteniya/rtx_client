@@ -4,7 +4,7 @@ import UsersTable from '../UsersTable'
 import { useGetAllUsersQuery } from '@api/api-users'
 import { usePagination } from '@hooks/usePagination'
 import { useMemo } from 'react'
-import { useQueryParams } from '@hooks/useQueryParam'
+import { ARRAY_DELIMITER, useQueryParams } from '@hooks/useQueryParam'
 import { Pto } from 'rtxtypes'
 
 export type UsersFilters = {
@@ -30,11 +30,15 @@ const AllUsersTable = () => {
   const handleFiltersChange = (newFilters: UsersFilters) => {
     Object.entries(newFilters).forEach(([key, value]) => {
       const currentParam = Array.isArray(value) ? getParamArray(key) : getParam(key)
-      if (currentParam?.toString() !== value.toString()) {
-        setParams({ [pageKey]: '1', [key]: value.toString() })
+      if (currentParam?.toString() !== value?.toString()) {
+        setParams({
+          [pageKey]: '1',
+          [key]: Array.isArray(value) ? value.join(ARRAY_DELIMITER) : value?.toString() || ''
+        })
       }
     })
   }
+
   const pagination = {
     current: page,
     onChange: (page: number, pageSize: number) => {

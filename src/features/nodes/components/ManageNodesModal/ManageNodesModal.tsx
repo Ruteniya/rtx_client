@@ -6,11 +6,15 @@ import { ImageUpload } from '@features/system/components'
 
 const ManageNodesModal = ({
   nodeData,
+  categories,
   isVisible,
+  isLoading,
   closeModal
 }: {
   nodeData?: Pto.Nodes.Node
+  categories: Pto.Categories.Category[]
   isVisible: boolean
+  isLoading: boolean
   closeModal: () => void
 }) => {
   const [createNode, { isLoading: isCreating }] = useCreateNodeMutation()
@@ -74,10 +78,21 @@ const ManageNodesModal = ({
       confirmLoading={isCreating || isUpdating}
       okText={isEditMode ? 'Готово' : 'Додати'}
       cancelText="Скасувати"
+      loading={isLoading}
     >
       <Form key={nodeData ? nodeData.id : 'create'} form={form} layout="vertical">
         <Form.Item name="name" label="Назва точки" rules={[{ required: true, message: 'Введіть назву точки' }]}>
           <Input placeholder="Ex. А1" maxLength={5} />
+        </Form.Item>
+
+        <Form.Item name="categoryIds" label="Категорія" rules={[{ required: true, message: 'Виберіть категорію' }]}>
+          <Select mode="multiple" placeholder="Оберіть категорії">
+            {categories?.map((category) => (
+              <Select.Option key={category.id} value={category.id}>
+                {category.name}
+              </Select.Option>
+            ))}
+          </Select>
         </Form.Item>
 
         <Form.Item name="color" label="Колір" initialValue="#000000">
