@@ -1,22 +1,73 @@
-import { Button, Dropdown, Flex, message, Modal, Table, Tag } from 'antd'
-import { useDeleteGroupMutation, useGetGroupsQuery } from '@api/groups-api'
+import { Button, Dropdown, Flex, Input, message, Modal, Select, Table, Tag } from 'antd'
+import { useDeleteGroupMutation, useGetGroupsQuery, useLazyGetGroupsCsvQuery } from '@api/groups-api'
+import { useGetCategoriesQuery } from '@api/api-categories'
 
 import { Pto } from 'rtxtypes'
 import { DeleteOutlined, DownloadOutlined, EditOutlined, MoreOutlined } from '@ant-design/icons'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import useModal from '@hooks/useModal'
 import ManageGroupsModal from '@features/groups/components/ManageGroupModal'
 import { useNavigate } from 'react-router-dom'
 import { AppRoutes } from '@app/app-routes'
-import Papa from 'papaparse'
+import { usePagination } from '@hooks/usePagination'
+import { ARRAY_DELIMITER, useQueryParams } from '@hooks/useQueryParam'
+
+export type GroupsFilters = {
+  searchText?: string
+  categoryIds?: string[]
+}
+
+enum PaginationKeys {
+  Search = 'searchText',
+  CategoryIds = 'categoryIds'
+}
+
+const pageKey: keyof Pto.App.Pagination = 'page'
 
 const GroupsTable = () => {
-  const { data, isLoading } = useGetGroupsQuery()
+  const { page, size, onPageSizeChange } = usePagination(10)
+  const { getParamArray, setParams, getParam } = useQueryParams()
+  const filters: GroupsFilters = useMemo(
+    () => ({
+      searchText: (getParam(PaginationKeys.Search) as GroupsFilters['searchText']) || undefined,
+      categoryIds: getParamArray(PaginationKeys.CategoryIds).length
+        ? (getParamArray(PaginationKeys.CategoryIds) as GroupsFilters['categoryIds'])
+        : undefined
+    }),
+    [getParam(PaginationKeys.Search), getParamArray(PaginationKeys.CategoryIds)]
+  )
+  const { data, isLoading } = useGetGroupsQuery({ page, size, ...filters })
+  const { data: categoriesData } = useGetCategoriesQuery()
+  const categories = categoriesData?.items ?? []
   const [deleteGroup] = useDeleteGroupMutation()
+  const [getGroupsCsv, { isLoading: isCsvLoading }] = useLazyGetGroupsCsvQuery()
   const { openModal: openEditModal, isVisible: isEditModalVisible, closeModal: closeEditModal } = useModal()
   const [currentGroup, setCurrentGroup] = useState<Pto.Groups.Group>()
   const navigate = useNavigate()
   const groups = data?.items
+
+  const handleFiltersChange = (newFilters: GroupsFilters) => {
+    Object.entries(newFilters).forEach(([key, value]) => {
+      const currentParam = Array.isArray(value) ? getParamArray(key) : getParam(key)
+      if (currentParam?.toString() !== value?.toString()) {
+        setParams({
+          [pageKey]: '1',
+          [key]: Array.isArray(value) ? value.join(ARRAY_DELIMITER) : value?.toString() ?? ''
+        })
+      }
+    })
+  }
+
+  const pagination = {
+    current: page,
+    onChange: (page: number, pageSize: number) => {
+      onPageSizeChange(page, pageSize)
+    },
+    total: data?.total ?? 0,
+    pageSizeOptions: [5, 10, 15, 20],
+    pageSize: size,
+    showSizeChanger: true
+  }
 
   const handleDelete = (id: string) => {
     Modal.confirm({
@@ -26,35 +77,23 @@ const GroupsTable = () => {
       }
     })
   }
+
   const handleEdit = (record: Pto.Groups.Group) => {
     setCurrentGroup(record)
     openEditModal()
   }
 
-  const exportToCSV = () => {
-    if (!groups?.length) {
-      message.warning('Немає даних для експорту')
-      return
+  const exportToCSV = async () => {
+    try {
+      await getGroupsCsv().unwrap().then(({url}) => {
+        window.open(url, '_blank')
+        message.success('CSV завантажено')
+      }).catch(() => {  
+        message.error('Не вдалося завантажити CSV')
+      })
+    } catch {
+      message.error('Не вдалося завантажити CSV')
     }
-
-    const csvData = groups.map((group) => ({
-      ID: group.id,
-      'Назва команди': group.name,
-      'Кількість учасників': group.numberOfParticipants,
-      'Категорія ID': group.categoryId,
-      'Категорія Назва': group.category.name,
-      'Категорія Опис': group.category.description,
-      'Колір категорії': group.category.color
-    }))
-
-    const csvString = Papa.unparse(csvData)
-    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' })
-    const link = document.createElement('a')
-    link.href = URL.createObjectURL(blob)
-    link.download = 'groups.csv'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
   }
 
   const columns = [
@@ -62,19 +101,16 @@ const GroupsTable = () => {
       title: 'Назва команди',
       dataIndex: 'name',
       key: 'name',
-      sorter: (a: Pto.Groups.Group, b: Pto.Groups.Group) => a.name.localeCompare(b.name)
     },
     {
       title: 'Кількість учасників',
       dataIndex: 'numberOfParticipants',
       key: 'numberOfParticipants',
-      sorter: (a: Pto.Groups.Group, b: Pto.Groups.Group) => a.numberOfParticipants - b.numberOfParticipants
     },
     {
       title: 'Категорія',
       dataIndex: 'category',
       key: 'category',
-      sorter: (a: Pto.Groups.Group, b: Pto.Groups.Group) => a.category.name.localeCompare(b.category.name),
       render: (category: Pto.Categories.Category) => (
         <Tag color={category.color || 'grey'} className="text-white font-bold">
           {category?.name || 'Невизначено'}
@@ -115,8 +151,38 @@ const GroupsTable = () => {
 
   return (
     <>
-      <Flex justify="end">
-        <Button icon={<DownloadOutlined />} onClick={exportToCSV} style={{ marginBottom: 16 }}>
+      <Flex justify="space-between" align="center" style={{ marginBottom: 16 }} wrap="wrap" gap={8}>
+        <Flex wrap="wrap" gap={8} align="center">
+          <Input.Search
+            defaultValue={getParam(PaginationKeys.Search) ?? ''}
+            placeholder="Шукати команду"
+            allowClear
+            onSearch={(value) => handleFiltersChange({ ...filters, searchText: value })}
+            style={{ width: 250 }}
+            className="[&_.ant-input-search-button]:!w-[42px]"
+          />
+          <Select
+            mode="multiple"
+            allowClear
+            placeholder="Категорії"
+            style={{ minWidth: 200 }}
+            value={filters.categoryIds ?? []}
+            onChange={(value: string[]) => handleFiltersChange({ ...filters, categoryIds: value.length ? value : undefined })}
+            options={categories.map((cat) => ({
+              label: (
+                <span className="flex items-center gap-2">
+                  <span
+                    className="inline-block h-3 w-3 rounded-full border border-gray-300 shrink-0"
+                    style={{ backgroundColor: cat.color ?? 'grey' }}
+                  />
+                  {cat.name}
+                </span>
+              ),
+              value: cat.id
+            }))}
+          />
+        </Flex>
+        <Button icon={<DownloadOutlined />} onClick={exportToCSV} loading={isCsvLoading}>
           Завантажити CSV
         </Button>
       </Flex>
@@ -126,6 +192,7 @@ const GroupsTable = () => {
         columns={columns}
         rowKey="id"
         loading={isLoading}
+        pagination={pagination}
         onRow={(record: Pto.Groups.Group) => {
           return { onClick: () => navigate(`${AppRoutes.groups}/${record.id}`) }
         }}

@@ -12,7 +12,11 @@ export default defineConfig({
         `@${dir}`,
         path.resolve(__dirname, `./src/${dir}`)
       ])
-    )
+    ),
+    dedupe: ['react', 'react-dom']
+  },
+  server: {
+    fs: { allow: ['..'] }
   },
   optimizeDeps: {
     include: ['rtxtypes']

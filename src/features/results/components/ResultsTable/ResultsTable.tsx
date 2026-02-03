@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Flex, Table, Typography } from 'antd'
+import { Button, Flex, message, Table, Typography } from 'antd'
 import { Pto } from 'rtxtypes'
 import { ColumnType } from 'antd/es/table'
-import Papa from 'papaparse'
+import { TablePaginationConfig } from 'antd'
+import { useLazyGetResultsCsvQuery } from '@api/api-results'
 
 interface Props {
   results: Pto.Results.ResultPopulated[]
   nodes: Pto.Nodes.NodeSmall[]
+  pagination?: false | TablePaginationConfig
+  sortBy?: 'groupName' | 'totalPoints'
+  sortOrder?: 'ASC' | 'DESC'
+  onSortChange?: (sortBy?: 'groupName' | 'totalPoints', sortOrder?: 'ASC' | 'DESC') => void
 }
 
-const ResultsTable: React.FC<Props> = ({ results, nodes }) => {
+const ResultsTable: React.FC<Props> = ({ results, nodes, pagination, sortBy, sortOrder, onSortChange }) => {
   const [updatedAt, setUpdatedAt] = useState('')
+  const [getResultsCsv, { isLoading: isCsvLoading }] = useLazyGetResultsCsvQuery()
 
   useEffect(() => {
     const anyUpdatedAt = results.flatMap((team) => team.results).find((data) => data?.updatedAt)?.updatedAt
@@ -29,22 +35,38 @@ const ResultsTable: React.FC<Props> = ({ results, nodes }) => {
     }
   }, [results])
 
+  const handleTableChange = (_: unknown, __: unknown, sorter: unknown) => {
+    if (!onSortChange) return
+    const sorters = Array.isArray(sorter) ? sorter : sorter ? [sorter] : []
+    const active = sorters.find(
+      (s: { order?: 'ascend' | 'descend' | null }) => s.order === 'ascend' || s.order === 'descend'
+    )
+    if (!active) {
+      onSortChange(undefined, undefined)
+      return
+    }
+    const { field, order } = active as { field?: string; order?: 'ascend' | 'descend' }
+    const backendField = field === 'total' ? 'totalPoints' : field
+    if (backendField !== 'groupName' && backendField !== 'totalPoints') return
+    onSortChange(backendField, order === 'ascend' ? 'ASC' : 'DESC')
+  }
+
   const columns: ColumnType<any>[] = [
     {
       title: 'Команда',
       dataIndex: 'groupName',
       key: 'groupName',
       fixed: 'left',
-      sorter: (a, b) => a.groupName.localeCompare(b.groupName)
+      sorter: true,
+      sortOrder: sortBy === 'groupName' ? (sortOrder === 'ASC' ? 'ascend' : 'descend') : undefined
     },
     {
       title: 'Категорія',
       dataIndex: 'categoryName',
       key: 'categoryName',
-      fixed: 'left',
-      sorter: (a, b) => a.categoryName.localeCompare(b.categoryName)
+      fixed: 'left'
     },
-    ...nodes?.map((node: Pto.Nodes.Node) => ({
+    ...nodes?.map((node: Pto.Nodes.NodeSmall) => ({
       title: (
         <>
           <span
@@ -62,7 +84,8 @@ const ResultsTable: React.FC<Props> = ({ results, nodes }) => {
       dataIndex: 'total',
       key: 'total',
       fixed: 'right',
-      sorter: (a, b) => a.total - b.total
+      sorter: true,
+      sortOrder: sortBy === 'totalPoints' ? (sortOrder === 'ASC' ? 'ascend' : 'descend') : undefined
     }
   ]
 
@@ -80,30 +103,22 @@ const ResultsTable: React.FC<Props> = ({ results, nodes }) => {
     return row
   })
 
-  const exportToCSV = () => {
-    const csvData = [
-      columns.map((col) => col.title),
-      ...groupedData.map(
-        (row) => columns.map((col) => row[col.dataIndex] ?? '') // Fill empty cells with ''
-      )
-    ]
-
-    const csvString = Papa.unparse(csvData)
-    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' })
-    const link = document.createElement('a')
-    link.href = URL.createObjectURL(blob)
-    link.download = 'results.csv'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+  const exportToCSV = async () => {
+    try {
+      const { url } = await getResultsCsv().unwrap()
+      window.open(url, '_blank')
+      message.success('CSV завантажено')
+    } catch {
+      message.error('Не вдалося завантажити CSV')
+    }
   }
 
   return (
     <>
       <Flex justify="space-between">
-        <Typography.Text>{updatedAt}</Typography.Text>
-        <Button onClick={exportToCSV} className="mb-3">
-          Завантажити в csv
+        <Typography.Text className="min-w-[150px]">{updatedAt}</Typography.Text>
+        <Button onClick={exportToCSV} loading={isCsvLoading} className="mb-3">
+          Завантажити всі результати в csv
         </Button>
       </Flex>
 
@@ -113,6 +128,8 @@ const ResultsTable: React.FC<Props> = ({ results, nodes }) => {
         dataSource={groupedData}
         rowKey="groupName"
         bordered
+        pagination={pagination}
+        onChange={handleTableChange}
       />
     </>
   )

@@ -1,12 +1,24 @@
 import { Pto } from 'rtxtypes'
 import { apiSlice } from './api-slice'
+import { getQueryParamString } from '@utils/get-query-param-string'
 
 export const groupsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getGroups: builder.query<Pto.Groups.GroupList, void>({
+    getGroups: builder.query<Pto.Groups.GroupList, Pto.Groups.GroupsListQuery | void>({
+      query: (params) => {
+        const queryParams = getQueryParamString({ ...(params ?? { page: 1, size: 1000 }) })
+        
+        return {
+          url: `groups?${queryParams}`,
+          method: 'GET'
+        }
+      },
+      providesTags: ['Groups']
+    }),
+    getGroupsCsv: builder.query<Pto.App.File, void>({
       query: () => {
         return {
-          url: `groups`,
+          url: 'groups/export/csv',
           method: 'GET'
         }
       },
@@ -60,6 +72,7 @@ export const groupsApi = apiSlice.injectEndpoints({
 
 export const {
   useGetGroupsQuery,
+  useLazyGetGroupsCsvQuery,
   useGetGroupQuery,
   useGetPopulatedGroupQuery,
   useLazyGetGroupQuery,

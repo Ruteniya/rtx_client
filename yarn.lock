@@ -2265,10 +2265,10 @@ rollup@^4.30.1:
     "@rollup/rollup-win32-x64-msvc" "4.34.9"
     fsevents "~2.3.2"
 
-rtxtypes@1.1.5:
-  version "1.1.5"
-  resolved "https://registry.npmjs.org/rtxtypes/-/rtxtypes-1.1.5.tgz#09eba57e35b5455832b8978605081355d53d2bf6"
-  integrity sha512-d31iVs5GvTfG8nQtNbv/B4nQz9c3ensV/gGiaiRRGkx4ZigmfMa+OnhnjLTZj7SCKf2lUqAq0ituTDf2M4Uw1A==
+rtxtypes@1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/rtxtypes/-/rtxtypes-1.1.7.tgz#eaf9190ccb57ab9cd8b1b9fc2caacfb7bf9ea462"
+  integrity sha512-ax7YCrObxq4kq8GoTyk7+3Uj4UCqvUfA7kif1+yD5e9zaOBcWuqxBXsRAFUsc583+WDST65z4Lwj3Z9LEB7dbg==
 
 run-parallel@^1.1.9:
   version "1.2.0"
