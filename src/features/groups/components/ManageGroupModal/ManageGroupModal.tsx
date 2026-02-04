@@ -38,14 +38,16 @@ const ManageGroupsModal = ({
           data: {
             name: values.name,
             categoryId: values.categoryId,
-            numberOfParticipants: Number(values.numberOfParticipants)
+            numberOfParticipants: Number(values.numberOfParticipants),
+            emails: values.emails
           }
         })
       } else {
         await createGroup({
           name: values.name,
           categoryId: values.categoryId,
-          numberOfParticipants: Number(values.numberOfParticipants)
+          numberOfParticipants: Number(values.numberOfParticipants),
+          emails: values.emails
         })
       }
       form.resetFields()
@@ -85,6 +87,37 @@ const ManageGroupsModal = ({
             ))}
           </Select>
         </Form.Item>
+        <Form.Item
+          name="emails"
+          label="Emails для надсилання кодів команд"
+          rules={[
+            {
+              required: true,
+              message: 'Додайте хоча б один email'
+            },
+            {
+              validator: (_, value: string[]) => {
+                if (!value) return Promise.resolve()
+
+                const invalidEmail = value.find(
+                  (email) => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+                )
+
+                return invalidEmail
+                  ? Promise.reject(`Невірний email: ${invalidEmail}`)
+                  : Promise.resolve()
+              }
+            }
+          ]}
+        >
+          <Select
+            mode="tags"
+            placeholder="Введіть email та натисніть Enter"
+            tokenSeparators={[',', ' ']}
+          />
+        </Form.Item>
+
+
 
         {isEditMode && groupData && (
           <>

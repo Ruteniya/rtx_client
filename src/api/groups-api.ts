@@ -52,6 +52,14 @@ export const groupsApi = apiSlice.injectEndpoints({
       },
       invalidatesTags: ['Groups']
     }),
+    importGroupsCsv: builder.mutation<Pto.Groups.Group[], { groups: Pto.Groups.CsvGroup[] }>({
+      query: (body) => ({
+        url: 'groups/bulk',
+        method: 'POST',
+        body
+      }),
+      invalidatesTags: ['Groups']
+    }),
     updateGroup: builder.mutation<Pto.Groups.Group, { id: string; data: Pto.Groups.UpdateGroup }>({
       query: ({ id, data }) => ({
         url: `groups/${id}`,
@@ -77,6 +85,7 @@ export const {
   useGetPopulatedGroupQuery,
   useLazyGetGroupQuery,
   useCreateGroupMutation,
+  useImportGroupsCsvMutation,
   useUpdateGroupMutation,
   useDeleteGroupMutation
 } = groupsApi
