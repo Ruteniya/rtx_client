@@ -37,7 +37,7 @@ export const gamesApi = apiSlice.injectEndpoints({
 
     updateGame: builder.mutation<
       Pto.Games.Game,
-      { id: string; data: Pto.Games.CreateGame & { logo?: File }; options: Pto.Games.UpdateGameOptions }
+      { id: string; data: Pto.Games.UpdateGame & { logo?: File }; options: Pto.Games.UpdateGameOptions }
     >({
       query: ({ id, data, options }) => {
         const formData = new FormData()
@@ -46,6 +46,10 @@ export const gamesApi = apiSlice.injectEndpoints({
         formData.append('description', data.description ?? '')
         formData.append('startDate', data.startDate.toISOString())
         formData.append('endDate', data.endDate.toISOString())
+
+        if (data.status) {
+          formData.append('status', data.status)
+        }
 
         if (data.logo && typeof data.logo !== 'string') {
           formData.append('logo', data.logo)

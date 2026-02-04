@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, DatePicker, Button, message, Card, Flex, Typography, Modal } from 'antd'
+import { Form, Input, DatePicker, Button, message, Card, Flex, Typography, Modal, Select } from 'antd'
 import { Pto } from 'rtxtypes'
 import { useCreateGameMutation, useDeleteGameMutation, useUpdateGameMutation } from '@api/api-games'
 import dayjs from '@utils/dayjs-config'
@@ -20,27 +20,37 @@ const GameForm: React.FC<GameFormProps> = ({ isEditMode, initialValues, onSucces
   const [deleteGame] = useDeleteGameMutation()
   const [form] = Form.useForm()
 
-  const [logoFile, setLogoFile] = React.useState<File | null>(null)
+  const gameStatusOptions = [
+    { value: Pto.Games.GameStatus.Draft, label: 'В процесі розробки' },
+    { value: Pto.Games.GameStatus.Running, label: 'Активна' },
+    { value: Pto.Games.GameStatus.Stopped, label: 'Зупинена' },
+    { value: Pto.Games.GameStatus.Finished, label: 'Завершена' }
+  ]
 
   const handleSubmit = async (values: any) => {
-    const payload: Pto.Games.CreateGame & { logo: File | undefined } = {
+    const basePayload: Pto.Games.CreateGame & { logo: File | undefined } = {
       name: values.name,
       description: values.description,
       startDate: values.startDate,
       endDate: values.endDate,
-      logo: logoFile || undefined
+      logo: values.logo
     }
 
     try {
       if (isEditMode) {
+        const updatePayload: Pto.Games.UpdateGame & { logo: File | undefined } = {
+          ...basePayload,
+          status: values.status as Pto.Games.GameStatus
+        }
+
         await updateGame({
           id: initialValues?.id || '',
-          data: payload,
-          options: { deleteLogo: logoFile === null }
+          data: updatePayload,
+          options: { deleteLogo: basePayload.logo === null }
         }).unwrap()
         message.success('Гра оновлена успішно')
       } else {
-        await createGame(payload).unwrap()
+        await createGame(basePayload).unwrap()
         message.success('Гру створено успішно')
       }
 
@@ -94,20 +104,13 @@ const GameForm: React.FC<GameFormProps> = ({ isEditMode, initialValues, onSucces
             endDate: initialValues?.endDate ? dayjs(new Date(initialValues.endDate)) : undefined
           }}
         >
-          <Form.Item
-            name="logo"
-            label="Логотип гри"
-            valuePropName="value"
-            getValueFromEvent={(value: File | string | null) => value}
-          >
-            <Flex justify="center">
-              <ImageUpload
-                initialValue={initialValues?.logo}
-                onUpload={(file: File | null) => setLogoFile(file)}
-                onDelete={() => setLogoFile(null)}
-              />
-            </Flex>
-          </Form.Item>
+
+        <Form.Item name="logo" label="Логотип гри" preserve={false}>
+          <ImageUpload
+            initialValue={initialValues?.logo}
+            onUpload={(file) => form.setFieldValue('logo', file)}
+          />
+        </Form.Item>
 
           <Form.Item name="name" label="Назва гри" rules={[{ required: true, message: 'Введіть назву гри' }]}>
             <Input placeholder="Наприклад: Winter Challenge 2025" />
@@ -136,6 +139,16 @@ const GameForm: React.FC<GameFormProps> = ({ isEditMode, initialValues, onSucces
               <DatePicker style={{ width: '100%' }} showTime format="YYYY-MM-DD HH:mm" />
             </Form.Item>
           </Flex>
+
+          {isEditMode && (
+            <Form.Item
+              name="status"
+              label="Статус"
+              rules={[{ required: true, message: 'Оберіть статус гри' }]}
+            >
+              <Select placeholder="Оберіть статус" options={gameStatusOptions} />
+            </Form.Item>
+          )}
 
           <Button type="primary" htmlType="submit" size="large" block style={{ marginTop: 8 }}>
             {isEditMode ? 'Зберегти зміни' : 'Створити гру'}
