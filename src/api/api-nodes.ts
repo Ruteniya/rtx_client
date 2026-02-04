@@ -98,14 +98,14 @@ export const nodesApi = apiSlice.injectEndpoints({
       query: ({ id, updateNodeDto, options }) => {
         const formData = new FormData()
 
-        if (updateNodeDto.name) formData.append('name', updateNodeDto.name ?? '')
-        if (updateNodeDto.categoryIds) formData.append('categoryIds', updateNodeDto.categoryIds.join(',') ?? '')
-        if (updateNodeDto.question) formData.append('question', updateNodeDto.question ?? '')
-        if (updateNodeDto.comment) formData.append('comment', updateNodeDto.comment ?? '')
-        if (updateNodeDto.answerType) formData.append('answerType', updateNodeDto.answerType)
-        if (updateNodeDto.points) formData.append('points', updateNodeDto.points?.toString() ?? '0')
-        if (updateNodeDto.adminDescription) formData.append('adminDescription', updateNodeDto.adminDescription ?? '')
-        if (updateNodeDto.color) formData.append('color', updateNodeDto.color)
+        formData.append('name', updateNodeDto.name ?? '')
+        formData.append('categoryIds', updateNodeDto.categoryIds.join(',') ?? '')
+        formData.append('question', updateNodeDto.question ?? '')
+        formData.append('comment', updateNodeDto.comment ?? '')
+        formData.append('answerType', updateNodeDto.answerType)
+        formData.append('points', updateNodeDto.points?.toString() ?? '0')
+        formData.append('adminDescription', updateNodeDto.adminDescription ?? '')
+        formData.append('color', updateNodeDto.color ?? '')
 
         if (
           updateNodeDto.answerType === Pto.Nodes.AnswerType.Text &&

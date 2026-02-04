@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Select, InputNumber, message, Button } from 'antd'
+import { Modal, Form, Input, Select, InputNumber, message, Button, ColorPicker } from 'antd'
 import { useEffect } from 'react'
 import { Pto } from 'rtxtypes'
 import { useCreateNodeMutation, useUpdateNodeMutation } from '@api/api-nodes'
@@ -27,10 +27,28 @@ const ManageNodesModal = ({
   useEffect(() => {
     if (nodeData) {
       form.setFieldsValue(nodeData)
-    } else {
-      form.resetFields()
+      return
     }
-  }, [nodeData, isVisible])
+
+    if (isVisible) {
+      form.resetFields()
+      form.setFieldsValue({
+        answerType: Pto.Nodes.AnswerType.Photo,
+        color: ''
+      })
+    }
+  }, [nodeData, isVisible, form])
+
+  useEffect(() => {
+    if (!isVisible || nodeData) return
+
+    const defaultCategoryIds = categories?.map((category) => category.id) ?? []
+    const currentCategoryIds = form.getFieldValue('categoryIds')
+
+    if ((!currentCategoryIds || currentCategoryIds.length === 0) && defaultCategoryIds.length > 0) {
+      form.setFieldValue('categoryIds', defaultCategoryIds)
+    }
+  }, [categories, isVisible, nodeData, form])
 
   const handleSubmit = async () => {
     try {
@@ -95,8 +113,12 @@ const ManageNodesModal = ({
           </Select>
         </Form.Item>
 
-        <Form.Item name="color" label="Колір" initialValue="#000000">
-          <Input type="color" className="!w-full" />
+        <Form.Item name="color" label="Колір" getValueFromEvent={(_, css) => css}>
+          <ColorPicker
+            allowClear
+            format="hex"
+            onClear={() => form.setFieldValue('color', null)}
+          />
         </Form.Item>
 
         <Form.Item name="question" label="Питання" rules={[{ required: true, message: 'Введіть питання' }]}>
