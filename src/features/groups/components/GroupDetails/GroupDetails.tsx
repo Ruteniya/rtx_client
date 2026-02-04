@@ -10,7 +10,7 @@ interface GroupDetailsProps {
 
 const GroupDetails: React.FC<GroupDetailsProps> = ({ group }) => {
   return (
-    <Card title="Інформація про групу" style={{ width: '100%', marginBottom: 20 }} variant="borderless">
+    <Card title="Інформація про команду" style={{ width: '100%', marginBottom: 20 }} variant="borderless">
       <Title level={4}>{group.name}</Title>
 
       <Text strong>Кількість учасників: </Text>

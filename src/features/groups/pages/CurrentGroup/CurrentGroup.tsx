@@ -15,7 +15,7 @@ const CurrentGroup: React.FC = () => {
       {currentUser?.group ? (
         <GroupDetails group={{ ...currentUser?.group, category: currentUser.group.category || category }} />
       ) : (
-        'Інформація про групу відсутня'
+        'Інформація про команду відсутня'
       )}
       <NodesTabs />
     </div>
