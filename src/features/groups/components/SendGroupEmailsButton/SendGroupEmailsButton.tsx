@@ -38,7 +38,7 @@ const SendGroupEmailsButton = () => {
       <Select
         className='max-w-[350px]'
         mode="multiple"
-        placeholder="Виберіть групи для відправки кодів"
+        placeholder="Виберіть команди для відправки кодів"
         style={{ minWidth: 250, marginRight: 8 }}
         value={selectedGroups}
         onChange={setSelectedGroups}

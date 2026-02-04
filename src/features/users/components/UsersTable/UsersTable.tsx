@@ -46,7 +46,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ users, isLoading, showGroup, pa
     ...(showGroup
       ? [
           {
-            title: 'Група',
+            title: 'Команда',
             dataIndex: 'group',
             key: 'group',
             render: (group: { name: string }) => <span>{group?.name || 'Без групи'}</span>

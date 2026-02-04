@@ -56,7 +56,7 @@ const UploadGroupsModal = ({ isVisible, closeModal }: { isVisible: boolean; clos
           await bulkCreateGroups({ groups: groupsToCreate })
             .unwrap()
             .then(() => {
-              message.success('Групи успішно завантажено')
+              message.success('Команди успішно завантажено')
               closeModal()
               setFile(null)
             })
@@ -99,7 +99,7 @@ const UploadGroupsModal = ({ isVisible, closeModal }: { isVisible: boolean; clos
 
   return (
     <Modal
-      title="Завантажити групи CSV"
+      title="Додати команди з CSV"
       open={isVisible}
       onCancel={closeModal}
       onOk={handleUpload}
@@ -120,7 +120,7 @@ const UploadGroupsModal = ({ isVisible, closeModal }: { isVisible: boolean; clos
       <br />
 
       <p>
-        Щоб завантажити групи, підготуйте CSV файл із такими колонками: <br />
+        Щоб завантажити команди, підготуйте CSV файл із такими колонками: <br />
         <strong>Назва команди</strong>, <strong>Категорія</strong>, <strong>Кількість учасників</strong>,
         <strong>Email 1</strong>, <strong>Email 2</strong>, <strong>Email 3</strong>.
       </p>

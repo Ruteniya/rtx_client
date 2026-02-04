@@ -61,7 +61,7 @@ const GroupSelector: React.FC<GroupSelectorProps> = ({ setGroup }) => {
       <Text>Введи код команди, який тобі надіслали організатори:</Text>
       <Input
         className={`${isError || getGroupError ? '!border-red-400' : ''}`}
-        placeholder="Код групи"
+        placeholder="Код команди"
         value={groupId}
         onChange={(e) => setGroupId(e.target.value)}
       />
