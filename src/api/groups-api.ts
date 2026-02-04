@@ -74,6 +74,13 @@ export const groupsApi = apiSlice.injectEndpoints({
         method: 'DELETE'
       }),
       invalidatesTags: ['Groups']
+    }),
+    sendGroupEmails: builder.mutation<any, Pto.Groups.SendEmails>({
+      query: (body) => ({
+        url: 'groups/send-emails',
+        method: 'POST',
+        body
+      })
     })
   })
 })
@@ -87,5 +94,6 @@ export const {
   useCreateGroupMutation,
   useImportGroupsCsvMutation,
   useUpdateGroupMutation,
-  useDeleteGroupMutation
+  useDeleteGroupMutation,
+  useSendGroupEmailsMutation
 } = groupsApi

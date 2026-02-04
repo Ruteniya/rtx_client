@@ -7,7 +7,7 @@ import { useImportGroupsCsvMutation } from '@api/groups-api'
 
 interface CsvGroupRow {
   'Назва команди': string
-  'Категорія': string
+  Категорія: string
   'Кількість учасників': string
   'Email 1': string
   'Email 2': string
@@ -53,14 +53,17 @@ const UploadGroupsModal = ({ isVisible, closeModal }: { isVisible: boolean; clos
             return message.error(`Помилки у рядках: ${invalidRows.join(', ')}`)
           }
 
-          await bulkCreateGroups({ groups: groupsToCreate }).unwrap().then(() => {
-            message.success('Групи успішно завантажено')
-            closeModal()
-            setFile(null)
-          }).catch((err) => {
-            console.error(err)
-            message.error('Помилка при завантаженні груп')
-          })
+          await bulkCreateGroups({ groups: groupsToCreate })
+            .unwrap()
+            .then(() => {
+              message.success('Групи успішно завантажено')
+              closeModal()
+              setFile(null)
+            })
+            .catch((err) => {
+              console.error(err)
+              message.error('Помилка при завантаженні груп')
+            })
         } catch (err) {
           console.error(err)
           message.error('Помилка при завантаженні груп')
@@ -75,25 +78,24 @@ const UploadGroupsModal = ({ isVisible, closeModal }: { isVisible: boolean; clos
     const template: CsvGroupRow[] = [
       {
         'Назва команди': '',
-        'Категорія': '',
+        Категорія: '',
         'Кількість учасників': '',
         'Email 1': '',
         'Email 2': '',
         'Email 3': ''
       }
     ]
-  
+
     const csv = Papa.unparse(template)
-  
+
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
     link.setAttribute('download', 'groups_template.csv')
     link.click()
-  
+
     URL.revokeObjectURL(link.href)
   }
-  
 
   return (
     <Modal
@@ -108,31 +110,28 @@ const UploadGroupsModal = ({ isVisible, closeModal }: { isVisible: boolean; clos
         </Button>
       ]}
     >
-
-    <br/>
+      <br />
 
       <Button key="template" icon={<DownloadOutlined />} onClick={downloadTemplate}>
-          Завантажити шаблон
+        Завантажити шаблон
       </Button>
 
-      <br/>
-      <br/>
-
+      <br />
+      <br />
 
       <p>
         Щоб завантажити групи, підготуйте CSV файл із такими колонками: <br />
-        <strong>Назва команди</strong>, <strong>Категорія</strong>, <strong>Кількість учасників</strong>, 
+        <strong>Назва команди</strong>, <strong>Категорія</strong>, <strong>Кількість учасників</strong>,
         <strong>Email 1</strong>, <strong>Email 2</strong>, <strong>Email 3</strong>.
       </p>
-      
-      <br/>
+
+      <br />
 
       <Upload beforeUpload={handleBeforeUpload} accept=".csv" maxCount={1}>
         <Button icon={<UploadOutlined />}>Оберіть CSV файл</Button>
       </Upload>
     </Modal>
   )
-  
 }
 
 export default UploadGroupsModal
