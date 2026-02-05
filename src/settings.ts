@@ -7,16 +7,16 @@ const env = {
 
 const backendHosts: { [k: string]: string } = {
   development: 'http://localhost:4496',
-  production: 'https://rtxserver-production.up.railway.app'
+  production: 'https://api.ruteniya.space/'
 }
 
 const frontendHosts: { [k: string]: string } = {
-  development: 'http://localhost:4496',
-  production: 'https://rtxserver-production.up.railway.app'
+  development: 'http://localhost:5173',
+  production: 'https://www.ruteniya.space/'
 }
 
 export const settings = {
   env,
   backendHost: backendHosts[mode] || 'http://localhost:4496',
-  frontendHost: frontendHosts[mode] || 'http://localhost:4496'
+  frontendHost: frontendHosts[mode] || 'http://localhost:5173'
 }
