@@ -7,12 +7,12 @@ const env = {
 
 const backendHosts: { [k: string]: string } = {
   development: 'http://localhost:4496',
-  production: 'https://api.ruteniya.space/'
+  production: 'https://api.ruteniya.space'
 }
 
 const frontendHosts: { [k: string]: string } = {
   development: 'http://localhost:5173',
-  production: 'https://www.ruteniya.space/'
+  production: 'https://www.ruteniya.space'
 }
 
 export const settings = {
