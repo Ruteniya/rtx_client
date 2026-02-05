@@ -1,21 +1,23 @@
 import GroupsTable from '@features/groups/components/GroupsTable'
 import ManageGroupsMenu from '@features/groups/components/ManageGroupsMenu/ManageGroupsMenu'
 import SendGroupEmailsButton from '@features/groups/components/SendGroupEmailsButton'
-import { Divider, Flex, Typography } from 'antd'
+import { Divider, Flex } from 'antd'
+import { useState } from 'react'
 
 const Groups = () => {
+  const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>([])
+
+
   return (
     <>
       <ManageGroupsMenu />
+      <SendGroupEmailsButton groupIds={selectedGroupIds} />
       <Divider />
 
       <Flex className="overflow-auto" vertical>
-        <GroupsTable />
+        <GroupsTable selection={{ selectedGroupIds, onSelectGroupIds: setSelectedGroupIds }} />
       </Flex>
 
-      <Divider />
-      <Typography.Title level={2}>Надіслати коди команд</Typography.Title>
-      <SendGroupEmailsButton />
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { Button, Dropdown, Flex, Input, message, Modal, Select, Table, Tag } from 'antd'
+import { Button, Dropdown, Flex, Input, message, Modal, Select, Table, Tag, Tooltip } from 'antd'
 import { useDeleteGroupMutation, useGetGroupsQuery, useLazyGetGroupsCsvQuery } from '@api/groups-api'
 import { useGetCategoriesQuery } from '@api/api-categories'
 
@@ -15,27 +15,47 @@ import { ARRAY_DELIMITER, useQueryParams } from '@hooks/useQueryParam'
 export type GroupsFilters = {
   searchText?: string
   categoryIds?: string[]
+  hasEmailResults?: boolean
 }
 
 enum PaginationKeys {
   Search = 'searchText',
-  CategoryIds = 'categoryIds'
+  CategoryIds = 'categoryIds',
+  HasEmailResults = 'hasEmailResults'
 }
 
 const pageKey: keyof Pto.App.Pagination = 'page'
 
-const GroupsTable = () => {
+type GroupsTableProps = {
+  selection?: {
+    selectedGroupIds: string[]
+    onSelectGroupIds: (ids: string[]) => void
+  }
+}
+
+const GroupsTable = ({ selection }: GroupsTableProps) => {
   const { page, size, onPageSizeChange } = usePagination(10)
   const { getParamArray, setParams, getParam } = useQueryParams()
-  const filters: GroupsFilters = useMemo(
+  const filters: GroupsFilters & { hasEmailResults?: boolean } = useMemo(
     () => ({
       searchText: (getParam(PaginationKeys.Search) as GroupsFilters['searchText']) || undefined,
       categoryIds: getParamArray(PaginationKeys.CategoryIds).length
         ? (getParamArray(PaginationKeys.CategoryIds) as GroupsFilters['categoryIds'])
-        : undefined
+        : undefined,
+      hasEmailResults:
+        getParam(PaginationKeys.HasEmailResults) === 'true'
+          ? true
+          : getParam(PaginationKeys.HasEmailResults) === 'false'
+          ? false
+          : undefined
     }),
-    [getParam(PaginationKeys.Search), getParamArray(PaginationKeys.CategoryIds)]
+    [
+      getParam(PaginationKeys.Search),
+      getParamArray(PaginationKeys.CategoryIds),
+      getParam(PaginationKeys.HasEmailResults)
+    ]
   )
+
   const { data, isLoading } = useGetGroupsQuery({ page, size, ...filters })
   const { data: categoriesData } = useGetCategoriesQuery()
   const categories = categoriesData?.items ?? []
@@ -64,7 +84,7 @@ const GroupsTable = () => {
       onPageSizeChange(page, pageSize)
     },
     total: data?.total ?? 0,
-    pageSizeOptions: [5, 10, 15, 20],
+    pageSizeOptions: [2, 5, 10, 15, 20],
     pageSize: size,
     showSizeChanger: true
   }
@@ -85,12 +105,15 @@ const GroupsTable = () => {
 
   const exportToCSV = async () => {
     try {
-      await getGroupsCsv().unwrap().then(({url}) => {
-        window.open(url, '_blank')
-        message.success('CSV завантажено')
-      }).catch(() => {  
-        message.error('Не вдалося завантажити CSV')
-      })
+      await getGroupsCsv()
+        .unwrap()
+        .then(({ url }) => {
+          window.open(url, '_blank')
+          message.success('CSV завантажено')
+        })
+        .catch(() => {
+          message.error('Не вдалося завантажити CSV')
+        })
     } catch {
       message.error('Не вдалося завантажити CSV')
     }
@@ -100,12 +123,12 @@ const GroupsTable = () => {
     {
       title: 'Назва команди',
       dataIndex: 'name',
-      key: 'name',
+      key: 'name'
     },
     {
       title: 'Кількість учасників',
       dataIndex: 'numberOfParticipants',
-      key: 'numberOfParticipants',
+      key: 'numberOfParticipants'
     },
     {
       title: 'Категорія',
@@ -116,6 +139,22 @@ const GroupsTable = () => {
           {category?.name || 'Невизначено'}
         </Tag>
       )
+    },
+    {
+      title: 'Email відправлення',
+      dataIndex: 'emailResults',
+      key: 'emailResults',
+      render: (emailResults: Pto.Groups.GroupEmailResult[]) => {
+        if (!emailResults || !emailResults.length) return 0
+        const tooltipContent = emailResults
+          .map((r) => `${r.email} — ${new Date(r.createdAt).toLocaleString()}`)
+          .join('\n')
+        return (
+          <Tooltip title={<pre className="whitespace-pre-wrap">{tooltipContent}</pre>}>
+            <Tag color="blue">{emailResults.length}</Tag>
+          </Tooltip>
+        )
+      }
     },
     {
       title: 'Дії',
@@ -149,6 +188,15 @@ const GroupsTable = () => {
     }
   ]
 
+  const rowSelection = selection
+    ? {
+        selectedRowKeys: selection?.selectedGroupIds ?? [],
+        onChange: (selectedRowKeys: React.Key[]) => {
+          selection?.onSelectGroupIds(selectedRowKeys as string[])
+        }
+      }
+    : undefined
+
   return (
     <>
       <Flex justify="space-between" align="center" style={{ marginBottom: 16 }} wrap="wrap" gap={8}>
@@ -167,7 +215,9 @@ const GroupsTable = () => {
             placeholder="Категорії"
             style={{ minWidth: 200 }}
             value={filters.categoryIds ?? []}
-            onChange={(value: string[]) => handleFiltersChange({ ...filters, categoryIds: value.length ? value : undefined })}
+            onChange={(value: string[]) =>
+              handleFiltersChange({ ...filters, categoryIds: value.length ? value : undefined })
+            }
             options={categories.map((cat) => ({
               label: (
                 <span className="flex items-center gap-2">
@@ -181,12 +231,30 @@ const GroupsTable = () => {
               value: cat.id
             }))}
           />
+          <Select
+            placeholder="Email відправлення"
+            style={{ minWidth: 200 }}
+            value={filters.hasEmailResults === undefined ? undefined : filters.hasEmailResults ? 'true' : 'false'}
+            onChange={(value: string) => {
+              handleFiltersChange({
+                ...filters,
+                hasEmailResults: value === 'true' ? true : value === 'false' ? false : undefined
+              })
+            }}
+            options={[
+              { label: 'Усі', value: '' },
+              { label: 'Є email', value: 'true' },
+              { label: 'Нема email', value: 'false' }
+            ]}
+          />
         </Flex>
+
         <Button icon={<DownloadOutlined />} onClick={exportToCSV} loading={isCsvLoading}>
           Завантажити CSV
         </Button>
       </Flex>
       <Table
+        rowSelection={rowSelection}
         className="!max-w-[850px] min-w-fit sm:min-w-[80%]"
         dataSource={groups || []}
         columns={columns}

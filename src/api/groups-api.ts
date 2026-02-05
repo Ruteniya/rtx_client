@@ -80,7 +80,8 @@ export const groupsApi = apiSlice.injectEndpoints({
         url: 'groups/send-emails',
         method: 'POST',
         body
-      })
+      }),
+      invalidatesTags: ['Groups']
     })
   })
 })
