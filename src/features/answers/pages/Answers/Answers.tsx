@@ -38,14 +38,18 @@ const Answers = ({ processed }: { processed?: boolean }) => {
     processed,
     ...filters
   })
-  const { data: groupsData, isLoading: isGroupsLoading } = useGetGroupsQuery()
+
+  const groupSearch = getParam('groupSearch') || undefined
+  const { data: groupsData, isLoading: isGroupsLoading } = useGetGroupsQuery(
+    {page: 1, size: 20, searchText: groupSearch }
+  )
   const { data: nodesData, isLoading: isNodesLoading } = useGetSmallNodesQuery()
 
   const answers = answersData?.items || []
   const groups = groupsData?.items || []
   const nodes = nodesData?.items || []
 
-  const handleFiltersChange = (newFilters: AnswersFilters) => {
+  const handleFiltersChange = (newFilters: AnswersFilters & { groupSearch?: string }) => {
     Object.entries(newFilters).forEach(([key, value]) => {
       const currentParam = Array.isArray(value) ? getParamArray(key) : getParam(key)
       if (currentParam?.toString() !== value?.toString()) {
@@ -71,6 +75,8 @@ const Answers = ({ processed }: { processed?: boolean }) => {
         getSearchDefaultValue={getParam(PaginationKeys.Search) || ''}
         onChange={handleFiltersChange}
         showCorrectFilter={processed !== false}
+        onGroupSearch={(value) => handleFiltersChange({ ...filters, groupSearch: value })}
+        groupSearchValue={groupSearch}
       />
 
       <Flex justify="center" className="lg:!-mt-10">

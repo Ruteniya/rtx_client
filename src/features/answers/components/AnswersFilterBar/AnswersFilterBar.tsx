@@ -12,6 +12,8 @@ interface Props {
   onChange: (filters: AnswersFilters) => void
   getSearchDefaultValue?: string
   showCorrectFilter?: boolean
+  onGroupSearch?: (value: string) => void
+  groupSearchValue?: string
 }
 
 const AnswersFiltersBar = ({
@@ -22,7 +24,9 @@ const AnswersFiltersBar = ({
   isLoading,
   onChange,
   getSearchDefaultValue,
-  showCorrectFilter = false
+  showCorrectFilter = false,
+  onGroupSearch,
+  groupSearchValue
 }: Props) => {
   const dropdownContent = (
     <Flex
@@ -35,15 +39,18 @@ const AnswersFiltersBar = ({
       {groups && (
         <Select
           mode="multiple"
-          allowClear
           placeholder="Команди"
           loading={isLoading}
-          defaultValue={filters.groupIds}
+          value={filters.groupIds} // controlled value
           onChange={(value: string[]) => onChange({ ...filters, groupIds: value })}
           options={groups.map((group) => ({
             label: group.name,
             value: group.id
           }))}
+          onSearch={onGroupSearch}
+          searchValue={groupSearchValue || undefined} // preserves typed search
+          optionFilterProp="label" // optional: filter by label
+          allowClear
         />
       )}
 
