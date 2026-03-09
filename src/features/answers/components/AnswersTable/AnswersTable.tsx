@@ -1,10 +1,11 @@
 import { Button, Flex, message, Radio, Table, TablePaginationConfig, Tag, Tooltip, Typography } from 'antd'
 import { useEvaluateAnswersMutation } from '@api/api-answers'
 import { Pto } from 'rtxtypes'
-import { Image } from '@features/system/components'
+import { Image, TruncatedText } from '@features/system/components'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { AppRoutes } from '@app/app-routes'
+import { ColumnType } from 'antd/es/table'
 
 interface AnswerTableProps {
   answers: Pto.Answers.PopulatedAnswer[]
@@ -19,7 +20,6 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
   const [evaluateAnswers] = useEvaluateAnswersMutation()
   const [mode, setMode] = useState<'view' | 'evaluation'>('view')
   const [key, setKey] = useState(1)
-  const navigate = useNavigate()
 
   const handleSelectAnswer = (answerId: string, correct: boolean) => {
     setSelectedAnswers((prev) => {
@@ -49,7 +49,7 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
     </Tooltip>
   )
 
-  const columns = [
+  const columns: ColumnType<Pto.Answers.PopulatedAnswer>[] = [
     {
       title: getTitle('Точка'),
       dataIndex: ['node', 'name'],
@@ -57,6 +57,7 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
       ellipsis: true,
       render: (text: string, record: Pto.Answers.PopulatedAnswer) => {
         return (
+          <>
           <div className="flex items-center gap-2">
             {record.node.color && (
               <Tooltip
@@ -82,34 +83,25 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
               </Tooltip>
             )}
 
-            <span>{text}</span>
+            <span className="font-bold">{text}</span>
           </div>
+          <div>
+            <p>{record.node.question}</p>
+            {record.node.questionImage ? (
+              <div className="mt-1">
+                <Image
+                  src={record.node.questionImage}
+                  alt="Question image"
+                  imageSize={'100px'}
+                  expandable={true}
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </div>
+            ) : undefined}
+          </div>
+          </>
         )
       }
-      // sorter: true,
-      // sortOrder: sortBy === 'node,name' ? 'node.name' : undefined
-    },
-    {
-      title: getTitle('Питання'),
-      dataIndex: ['node', 'question'],
-      key: 'node.question',
-      ellipsis: true,
-      render: (question: string, record: Pto.Answers.PopulatedAnswer) => (
-        <>
-          <p>{question}</p>
-          {record.node.questionImage ? (
-            <div className="mt-1">
-              <Image
-                src={record.node.questionImage}
-                alt="Question image"
-                imageSize={'100px'}
-                expandable={true}
-                onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-          ) : undefined}
-        </>
-      )
     },
     {
       title: getTitle('Опис'),
@@ -119,14 +111,19 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
       render: (adminDescription: string) => adminDescription || '-'
     },
     {
-      title: getTitle('Категорія'),
-      dataIndex: ['group', 'category', 'name'],
-      key: 'group.category.name',
-      ellipsis: true,
-      render: (name: string, record: Pto.Answers.PopulatedAnswer) => (
-        <Tag className="!m-1 font-semibold" color={record.group.category?.color || 'grey'}>
-          {name || 'Категорія не вказана'}
-        </Tag>
+      title: getTitle('Команда'),
+      dataIndex: ['group', 'name'],
+      key: 'group.name',
+      render: (text: string, record: Pto.Answers.PopulatedAnswer) => (
+        <p >
+          <Link to={`${AppRoutes.groups}/${record.groupId}`}>
+            <TruncatedText text={text} maxLength={12} />
+          </Link>
+          <br/>
+          <Tag className="w-fit font-semibold" color={record.group.category?.color || 'grey'}>
+            {record.group.category?.name || 'Категорія не вказана'}
+          </Tag>
+        </p>
       )
     },
     {
@@ -144,7 +141,7 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
             onClick={(e) => e.stopPropagation()}
           />
         ) : (
-          record.node.correctAnswer
+          record.node.correctAnswer || '-'
         )
     },
     {
@@ -174,8 +171,9 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
           {record.userComment ? (
             <Typography.Paragraph>
               <br />
-              <strong>Коментар:</strong>
-              {record.userComment}
+              <strong>Коментар:</strong>{' '}
+              <br />
+              <TruncatedText text={record.userComment} maxLength={12} />
             </Typography.Paragraph>
           ) : undefined}
         </>
@@ -251,11 +249,20 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
         </div>
       </Flex>
 
+      <div className="mb-2">
+        <p>
+          Кількість відповідей: 
+          <strong>
+          {pagination.total}
+          </strong>
+        </p>
+      </div>
+
       <Table
         className="answers-table"
         key={key}
         dataSource={answers}
-        columns={columns}
+        columns={columns as unknown as ColumnType<Pto.Answers.PopulatedAnswer>[]}
         rowKey="id"
         loading={isLoading}
         scroll={{
@@ -267,9 +274,6 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
         rowClassName={(record: Pto.Answers.PopulatedAnswer) => {
           if (!record.processed) return ''
           return record.correct ? 'correct-answer' : 'incorrect-answer'
-        }}
-        onRow={(record: Pto.Answers.PopulatedAnswer) => {
-          return { onClick: () => navigate(`${AppRoutes.groups}/${record.groupId}`) }
         }}
       />
     </Flex>

@@ -28,6 +28,12 @@ const AnswersFiltersBar = ({
   onGroupSearch,
   groupSearchValue
 }: Props) => {
+  const activeFiltersCount = [
+    filters.groupIds?.length ? 1 : 0,
+    filters.nodeIds?.length ? 1 : 0,
+    showCorrectFilter && filters.correct !== undefined ? 1 : 0
+  ].reduce((a, b) => a + b, 0)
+
   const dropdownContent = (
     <Flex
       key={processed ? 'processed' : 'unprocessed'}
@@ -113,6 +119,11 @@ const AnswersFiltersBar = ({
       >
         <Button icon={<FilterOutlined />} className="flex items-center gap-1">
           Фільтри
+          {activeFiltersCount > 0 && (
+            <span className="ml-0.5 text-xs font-medium text-blue-600">
+              ({activeFiltersCount})
+            </span>
+          )}
         </Button>
       </Dropdown>
     </Flex>
