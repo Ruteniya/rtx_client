@@ -1,25 +1,57 @@
-import { Button, Flex, message, Radio, Table, TablePaginationConfig, Tag, Tooltip, Typography } from 'antd'
+import { Button, Flex, message, Modal, Radio, Table, TablePaginationConfig, Tag, Tooltip, Typography } from 'antd'
 import { useEvaluateAnswersMutation } from '@api/api-answers'
 import { Pto } from 'rtxtypes'
 import { Image, TruncatedText } from '@features/system/components'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useBlocker } from 'react-router-dom'
 import { AppRoutes } from '@app/app-routes'
 import { ColumnType } from 'antd/es/table'
+
+const UNSAVED_CHANGES_MESSAGE = 'Втратяться незбережені дані. Продовжити?'
 
 interface AnswerTableProps {
   answers: Pto.Answers.PopulatedAnswer[]
   isLoading: boolean
   pagination: TablePaginationConfig
+  tableKey: string
 }
 
 const { Text } = Typography
 
-const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, pagination }) => {
+const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, pagination, tableKey }) => {
   const [selectedAnswers, setSelectedAnswers] = useState<Pto.Answers.EvaluateAnswer[]>([])
   const [evaluateAnswers] = useEvaluateAnswersMutation()
   const [mode, setMode] = useState<'view' | 'evaluation'>('view')
   const [key, setKey] = useState(1)
+
+  const hasUnsavedChanges = mode === 'evaluation' && selectedAnswers.length > 0
+
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      hasUnsavedChanges && currentLocation.pathname !== nextLocation.pathname
+  )
+
+  const resetState = (resetMode: boolean = true) => {
+    if (resetMode) {
+      setMode('view')
+    }
+    setSelectedAnswers([])
+  }
+
+  useEffect(() => {
+    if (blocker.state === 'blocked') {
+      Modal.confirm({
+        title: UNSAVED_CHANGES_MESSAGE,
+        okText: 'Продовжити',
+        cancelText: 'Скасувати',
+        onOk: () => {
+          resetState()
+          blocker.proceed()
+        },
+        onCancel: () => blocker.reset()
+      })
+    }
+  }, [blocker])
 
   const handleSelectAnswer = (answerId: string, correct: boolean) => {
     setSelectedAnswers((prev) => {
@@ -213,7 +245,7 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
   ]
 
   return (
-    <Flex vertical className="!overflow-x-auto w-full">
+    <Flex vertical className="!overflow-x-auto w-full" key={tableKey}>
       <Flex justify="end">
         <div className="m-2">
           <Radio.Group className="min-w-[100px]" onChange={(e) => setMode(e.target.value)} defaultValue={mode}>
@@ -251,7 +283,7 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
 
       <div className="mb-2">
         <p>
-          Кількість відповідей: 
+          Кількість відповідей: {' '}
           <strong>
           {pagination.total}
           </strong>
@@ -270,7 +302,24 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
           x: true,
           scrollToFirstRowOnChange: true
         }}
-        pagination={pagination}
+        pagination={{
+          ...pagination,
+          onChange: (page, pageSize) => {
+            if (hasUnsavedChanges) {
+              Modal.confirm({
+                title: UNSAVED_CHANGES_MESSAGE,
+                okText: 'Продовжити',
+                cancelText: 'Скасувати',
+                onOk: () => {
+                  resetState(false)
+                  pagination.onChange?.(page, pageSize)
+                }
+              })
+            } else {
+              pagination.onChange?.(page, pageSize)
+            }
+          }
+        }}
         rowClassName={(record: Pto.Answers.PopulatedAnswer) => {
           if (!record.processed) return ''
           return record.correct ? 'correct-answer' : 'incorrect-answer'

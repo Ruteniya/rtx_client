@@ -81,6 +81,7 @@ const Answers = ({ processed }: { processed?: boolean }) => {
 
       <Flex justify="center" className="lg:!-mt-10">
         <AnswersTable
+          tableKey={processed !== undefined ? (processed ? 'processed' : 'unprocessed') : 'all'}
           isLoading={isAnswersLoading}
           answers={answers}
           pagination={{

@@ -86,6 +86,7 @@ const GroupDetailsPage: React.FC = () => {
       />
       <Flex justify="center">
         <AnswersTable
+          tableKey={`group-answers-${groupId}`}
           answers={answersData?.items || []}
           isLoading={isAnswersLoading}
           pagination={{
