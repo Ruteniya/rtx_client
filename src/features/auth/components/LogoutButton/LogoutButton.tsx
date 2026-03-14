@@ -10,9 +10,10 @@ import useModal from '@hooks/useModal'
 
 interface LogoutButtonProps {
   className?: string
+  collapsed?: boolean
 }
 
-const LogoutButton: React.FC<LogoutButtonProps> = ({ className = '' }) => {
+const LogoutButton: React.FC<LogoutButtonProps> = ({ className = '', collapsed = false }) => {
   const [logout] = useLogoutMutation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -35,7 +36,7 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ className = '' }) => {
         icon={<LogoutOutlined />}
         className={`!border-none w-full !bg-gray-100 max-w-[200px] rounded-2xl ${className}`}
       >
-        Вийти
+        {!collapsed ? 'Вийти' : ''}
       </Button>
 
       <Modal

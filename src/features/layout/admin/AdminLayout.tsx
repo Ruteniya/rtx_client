@@ -5,7 +5,9 @@ import { AppRoutes } from '@app/app-routes'
 import {
   CheckCircleOutlined,
   ExclamationCircleFilled,
+  MenuFoldOutlined,
   MenuOutlined,
+  MenuUnfoldOutlined,
   MessageOutlined,
   NodeIndexOutlined,
   TableOutlined,
@@ -25,7 +27,8 @@ const openKeys = ['answers']
 const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation()
   const game = useAppSelector((state) => state.user.game)
-  const [collapsed, setCollapsed] = useState(true)
+  const [collapsed, setCollapsed] = useState(true) // для мобільного Drawer
+  const [siderCollapsed, setSiderCollapsed] = useState(false) // для десктопного Sider (дефолт — розгорнутий)
 
   const menuItems: MenuItem[] = [
     {
@@ -83,25 +86,45 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     }
   ]
 
-  const MenuWraper: React.FC = () => (
+  const MenuWraper: React.FC<{
+    collapsed?: boolean
+    showCollapseTrigger?: boolean
+  }> = ({ collapsed: menuCollapsed, showCollapseTrigger }) => (
     <Flex vertical justify="space-between" className="h-full bg-white">
-      <Menu
-        selectedKeys={[location.pathname]}
-        openKeys={openKeys}
-        className="!mt-2"
-        mode="inline"
-        items={menuItems}
-        style={{ height: '100%' }}
-      />
+      <Flex vertical className="min-h-0 flex-1 overflow-hidden">
+        {showCollapseTrigger && (
+          <Flex className="shrink-0 justify-end px-2 py-2">
+            <Button
+              type="text"
+              icon={menuCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              className={`m-1 hover:!text-blue-950 min-w-[72px] ${menuCollapsed ? ' !bg-blue-50' : ''}`}
+              onClick={() => setSiderCollapsed((c) => !c)}
+              size='large'
+            />
+          </Flex>
+        )}
+        <Menu
+          selectedKeys={[location.pathname]}
+          openKeys={menuCollapsed ? [] : openKeys}
+          className="!mt-0 flex-1 !border-none"
+          mode="inline"
+          items={menuItems}
+          style={{ overflow: 'auto', minHeight: 0 }}
+          inlineCollapsed={menuCollapsed}
+        />
+      </Flex>
 
-      <Flex className="max-w-[200px] !m-2" justify="center" onClick={(e) => e.stopPropagation()}>
-        <LogoutButton className="!z-2000" />
+      <Flex
+        className={menuCollapsed ? '!m-2 justify-center shrink-0' : 'max-w-[200px] !m-2 justify-center shrink-0'}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <LogoutButton className="!z-2000 min-w-[72px]" collapsed={menuCollapsed}/>
       </Flex>
     </Flex>
   )
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: '100vh', height: '100vh', overflow: 'hidden' }}>
       {/* Кнопка для відкриття меню на малих екранах */}
       <div className="lg:hidden fixed top-2 left-2 z-50">
         <Button
@@ -124,12 +147,22 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <MenuWraper />
       </Drawer>
 
-      {/* Бокова панель для великих екранів */}
-      <Sider breakpoint="lg" collapsedWidth="0" className="hidden lg:block bg-transparent">
-        <MenuWraper />
+      {/* Бокова панель для великих екранів — висота по viewport, кнопка згортання зверху */}
+      <Sider
+        breakpoint="lg"
+        collapsedWidth={80}
+        width={220}
+        collapsible
+        collapsed={siderCollapsed}
+        onCollapse={setSiderCollapsed}
+        trigger={null}
+        className="hidden lg:block !max-w-[220px] overflow-hidden"
+        style={{ background: '#fff', height: '100vh' }}
+      >
+        <MenuWraper collapsed={siderCollapsed} showCollapseTrigger />
       </Sider>
 
-      <Layout style={{ padding: '0 24px 24px' }}>
+      <Layout style={{ padding: '0 24px 24px', minHeight: 0, overflow: 'auto' }}>
         <Content style={{ padding: 24, margin: 0, minHeight: 280 }}>{children}</Content>
       </Layout>
     </Layout>
