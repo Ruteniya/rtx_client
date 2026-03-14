@@ -145,6 +145,13 @@ export const nodesApi = apiSlice.injectEndpoints({
         method: 'DELETE'
       }),
       invalidatesTags: ['Nodes', 'SmallNodes']
+    }),
+    deleteNodesWithoutAnswers: builder.mutation<{ deleted: number }, void>({
+      query: () => ({
+        url: 'nodes/without-answers',
+        method: 'DELETE'
+      }),
+      invalidatesTags: ['Nodes', 'SmallNodes']
     })
   })
 })
@@ -161,5 +168,6 @@ export const {
   useLazyGetNodeQuery,
   useCreateNodeMutation,
   useUpdateNodeMutation,
-  useDeleteNodeMutation
+  useDeleteNodeMutation,
+  useDeleteNodesWithoutAnswersMutation
 } = nodesApi
