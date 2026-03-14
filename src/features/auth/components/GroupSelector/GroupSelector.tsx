@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Input, Button, Typography, Space, Divider, message } from 'antd'
 import { useLazyGetGroupQuery } from '@api/groups-api'
+import { useQueryParams } from '@hooks/useQueryParam'
 import { Pto } from 'rtxtypes'
 import { StorageKey, StorageService } from '@services/group.service'
 import { validate as validateUuid } from 'uuid'
@@ -12,6 +13,9 @@ interface GroupSelectorProps {
 }
 
 const GroupSelector: React.FC<GroupSelectorProps> = ({ setGroup }) => {
+  const { getParam } = useQueryParams()
+  const codeFromUrl = getParam('code') ?? ''
+
   const [groupId, setGroupId] = useState('')
   const [isError, setIsError] = useState(false)
 
@@ -19,6 +23,13 @@ const GroupSelector: React.FC<GroupSelectorProps> = ({ setGroup }) => {
 
   const [existingGroup, setExistingGroup] = useState<Pto.Groups.Group>()
   const existingGroupId = StorageService.getItem(StorageKey.GroupId)
+
+  useEffect(() => {
+    if (codeFromUrl && validateUuid(codeFromUrl)) {
+      setGroupId(codeFromUrl)
+      setIsError(false)
+    }
+  }, [codeFromUrl])
 
   useEffect(() => {
     const fetchGroup = async () => {
