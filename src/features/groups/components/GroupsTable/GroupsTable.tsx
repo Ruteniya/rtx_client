@@ -92,8 +92,17 @@ const GroupsTable = ({ selection }: GroupsTableProps) => {
   const handleDelete = (id: string) => {
     Modal.confirm({
       title: 'Видалити команду?',
+      content:
+        'Буде видалено команду, усіх користувачів у ній (крім системних адміністраторів) та записи про надсилання листів.',
       onOk: async () => {
-        await deleteGroup(id).then(message.success('Команду видалено'))
+        try {
+          await deleteGroup(id).unwrap()
+          message.success('Команду видалено')
+        } catch (err: any) {
+          const msg = err?.data?.message || err?.message || 'Не вдалося видалити команду'
+          message.error(msg)
+          throw err
+        }
       }
     })
   }

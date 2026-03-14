@@ -7,7 +7,7 @@ export const groupsApi = apiSlice.injectEndpoints({
     getGroups: builder.query<Pto.Groups.GroupList, Pto.Groups.GroupsListQuery | void>({
       query: (params) => {
         const queryParams = getQueryParamString({ ...(params ?? { page: 1, size: 1000 }) })
-        
+
         return {
           url: `groups?${queryParams}`,
           method: 'GET'
@@ -75,6 +75,14 @@ export const groupsApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Groups']
     }),
+    bulkDeleteGroups: builder.mutation<{ deleted: string[]; skipped: string[] }, { groupIds: string[] }>({
+      query: (body) => ({
+        url: 'groups/bulk-delete',
+        method: 'POST',
+        body
+      }),
+      invalidatesTags: ['Groups', 'Users']
+    }),
     sendGroupEmails: builder.mutation<any, Pto.Groups.SendEmails>({
       query: (body) => ({
         url: 'groups/send-emails',
@@ -96,5 +104,6 @@ export const {
   useImportGroupsCsvMutation,
   useUpdateGroupMutation,
   useDeleteGroupMutation,
+  useBulkDeleteGroupsMutation,
   useSendGroupEmailsMutation
 } = groupsApi
