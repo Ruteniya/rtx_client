@@ -37,7 +37,7 @@ const ManageNodesModal = ({
         color: ''
       })
     }
-  }, [nodeData, isVisible, form])
+  }, [nodeData, isVisible])
 
   useEffect(() => {
     if (!isVisible || nodeData) return

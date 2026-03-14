@@ -85,16 +85,17 @@ const GameInfo: React.FC<GameInfoProps> = ({ game }) => {
 
       {timeLeft !== null && game.status !== Pto.Games.GameStatus.Finished && (
        <Alert className='!mt-3' message={
-        <div className="w-[300px]">
+        <div className="w-[220px]">
           <Typography.Paragraph className="!mb-0">
             <strong>{countdownLabel}:</strong>{' '}
+            <br/>
             <Typography.Text strong type={countdownLabel === 'Гра завершена' ? 'secondary' : undefined}>
               {timeLeft}
             </Typography.Text>
           </Typography.Paragraph>
         </div>
 
-          } type="info" showIcon />
+          } />
       )}
     </Flex>
   )
