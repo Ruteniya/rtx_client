@@ -1,6 +1,7 @@
-import { Divider, Flex, Typography } from 'antd'
+import { Button, Divider, Flex, Popconfirm, Typography } from 'antd'
+import { DeleteOutlined } from '@ant-design/icons'
 import { AnswersFiltersBar, AnswersTable } from '@features/answers/components'
-import { useGetAllAnswersQuery } from '@api/api-answers'
+import { useGetAllAnswersQuery, useDeleteAllAnswersMutation } from '@api/api-answers'
 import { useGetGroupsQuery } from '@api/groups-api'
 import { usePagination } from '@hooks/usePagination'
 import { useQueryParams, ARRAY_DELIMITER } from '@hooks/useQueryParam'
@@ -40,14 +41,17 @@ const Answers = ({ processed }: { processed?: boolean }) => {
   })
 
   const groupSearch = getParam('groupSearch') || undefined
-  const { data: groupsData, isLoading: isGroupsLoading } = useGetGroupsQuery(
-    {page: 1, size: 20, searchText: groupSearch }
-  )
+  const { data: groupsData, isLoading: isGroupsLoading } = useGetGroupsQuery({
+    page: 1,
+    size: 20,
+    searchText: groupSearch
+  })
   const { data: nodesData, isLoading: isNodesLoading } = useGetSmallNodesQuery()
 
   const answers = answersData?.items || []
   const groups = groupsData?.items || []
   const nodes = nodesData?.items || []
+  const [deleteAllAnswers, { isLoading: isDeleting }] = useDeleteAllAnswersMutation()
 
   const handleFiltersChange = (newFilters: AnswersFilters & { groupSearch?: string }) => {
     Object.entries(newFilters).forEach(([key, value]) => {
@@ -63,7 +67,23 @@ const Answers = ({ processed }: { processed?: boolean }) => {
 
   return (
     <div>
-      <Typography.Title level={4}>Відповіді</Typography.Title>
+      <Flex justify="space-between" align="center" wrap="wrap" gap={8}>
+        <Typography.Title level={4}>Відповіді</Typography.Title>
+        {answersData?.total !== undefined && answersData?.total > 0 && processed === undefined && (
+        <Popconfirm
+          title="Видалити всі відповіді"
+          description="Буде видалено всі відповіді, фото з S3 та результати. Цю дію не можна скасувати."
+          onConfirm={() => deleteAllAnswers()}
+          okText="Видалити"
+          cancelText="Скасувати"
+          okButtonProps={{ danger: true }}
+        >
+          <Button danger icon={<DeleteOutlined />} loading={isDeleting} disabled={!answersData?.total}>
+            Видалити всі відповіді
+          </Button>
+        </Popconfirm>
+        )}
+      </Flex>
       <Divider />
 
       <AnswersFiltersBar

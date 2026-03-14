@@ -75,6 +75,13 @@ export const answersApi = apiSlice.injectEndpoints({
         body
       }),
       invalidatesTags: ['Answers', 'SmallAnswers']
+    }),
+    deleteAllAnswers: builder.mutation<void, void>({
+      query: () => ({
+        url: 'answers',
+        method: 'DELETE'
+      }),
+      invalidatesTags: ['Answers', 'SmallAnswers', 'Results']
     })
   })
 })
@@ -85,5 +92,6 @@ export const {
   useGetAllAnswersQuery,
   useGiveAnswerMutation,
   useGetAnswerQuery,
-  useEvaluateAnswersMutation
+  useEvaluateAnswersMutation,
+  useDeleteAllAnswersMutation
 } = answersApi
