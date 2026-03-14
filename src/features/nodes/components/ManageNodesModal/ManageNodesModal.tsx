@@ -114,12 +114,29 @@ const ManageNodesModal = ({
         </Form.Item>
 
         <Form.Item name="color" label="Колір" getValueFromEvent={(_, css) => css}>
-          <ColorPicker
-            allowClear
-            format="hex"
-            onClear={() => form.setFieldValue('color', null)}
-          />
-        </Form.Item>
+        <ColorPicker
+          allowClear
+          format="hex"
+          presets={[
+            {
+              label: 'Кольори',
+              colors: [
+                '#000000', // ⚫
+                '#1677FF', // 🔵
+                '#52C41A', // 🟢
+                '#F5222D', // 🔴
+                '#FA8C16', // 🟠
+                '#FADB14', // 🟡
+                '#722ED1', // 🟣
+                '#EB2F96', // 🩷
+                '#13C2C2', // 🟦
+                '#595959', // ⚪/gray
+              ],
+            },
+          ]}
+          onClear={() => form.setFieldValue('color', null)}
+        />
+      </Form.Item>
 
         <Form.Item name="question" label="Питання" rules={[{ required: true, message: 'Введіть питання' }]}>
           <Input.TextArea placeholder="Ex. Сфотографуйтесь біля цієї будівлі" />
