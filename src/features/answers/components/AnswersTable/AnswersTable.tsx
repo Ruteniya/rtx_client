@@ -27,8 +27,7 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
   const hasUnsavedChanges = mode === 'evaluation' && selectedAnswers.length > 0
 
   const blocker = useBlocker(
-    ({ currentLocation, nextLocation }) =>
-      hasUnsavedChanges && currentLocation.pathname !== nextLocation.pathname
+    ({ currentLocation, nextLocation }) => hasUnsavedChanges && currentLocation.pathname !== nextLocation.pathname
   )
 
   const resetState = (resetMode: boolean = true) => {
@@ -90,47 +89,51 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
       render: (text: string, record: Pto.Answers.PopulatedAnswer) => {
         return (
           <>
-          <div className="flex items-center gap-2">
-            {record.node.color && (
-              <Tooltip
-                title={
-                  <div className="flex items-center gap-2">
-                    <span>Колір:</span>
-                    <Text
-                      className="!text-white"
-                      copyable={{
-                        text: record.node.color,
-                        onCopy: () => message.success('Колір скопійовано')
-                      }}
-                    >
-                      {record.node.color}
-                    </Text>
-                  </div>
-                }
-              >
-                <span
-                  className="inline-block h-5 w-5 rounded-full border border-gray-300 cursor-pointer"
-                  style={{ backgroundColor: record.node.color }}
-                />
-              </Tooltip>
-            )}
+            <div className="flex items-center gap-2">
+              {record.node.color && (
+                <Tooltip
+                  title={
+                    <div className="flex items-center gap-2">
+                      <span>Колір:</span>
+                      <Text
+                        className="!text-white"
+                        copyable={{
+                          text: record.node.color,
+                          onCopy: () => message.success('Колір скопійовано')
+                        }}
+                      >
+                        {record.node.color}
+                      </Text>
+                    </div>
+                  }
+                >
+                  <span
+                    className="inline-block h-5 w-5 rounded-full border border-gray-300 cursor-pointer"
+                    style={{ backgroundColor: record.node.color }}
+                  />
+                </Tooltip>
+              )}
 
-            <span className="font-bold">{text}</span>
-          </div>
-          <div>
-            <p>{record.node.question}</p>
-            {record.node.questionImage ? (
-              <div className="mt-1">
-                <Image
-                  src={record.node.questionImage}
-                  alt="Question image"
-                  imageSize={'100px'}
-                  expandable={true}
-                  onClick={(e) => e.stopPropagation()}
-                />
-              </div>
-            ) : undefined}
-          </div>
+              <span className="font-bold">
+                <TruncatedText text={text} maxLength={12} />
+              </span>
+            </div>
+            <div>
+              <p>
+                <TruncatedText text={record.node.question} maxLength={12} />
+              </p>
+              {record.node.questionImage ? (
+                <div className="mt-1">
+                  <Image
+                    src={record.node.questionImage}
+                    alt="Question image"
+                    imageSize={'100px'}
+                    expandable={true}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </div>
+              ) : undefined}
+            </div>
           </>
         )
       }
@@ -147,11 +150,11 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
       dataIndex: ['group', 'name'],
       key: 'group.name',
       render: (text: string, record: Pto.Answers.PopulatedAnswer) => (
-        <p >
+        <p>
           <Link to={`${AppRoutes.groups}/${record.groupId}`}>
             <TruncatedText text={text} maxLength={12} />
           </Link>
-          <br/>
+          <br />
           <Tag className="w-fit font-semibold" color={record.group.category?.color || 'grey'}>
             {record.group.category?.name || 'Категорія не вказана'}
           </Tag>
@@ -172,8 +175,10 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
             expandable={true}
             onClick={(e) => e.stopPropagation()}
           />
+        ) : record.node.correctAnswer ? (
+          <TruncatedText text={record.node.correctAnswer} maxLength={20} />
         ) : (
-          record.node.correctAnswer || '-'
+          '-'
         )
     },
     {
@@ -198,13 +203,12 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
               onClick={(e) => e.stopPropagation()}
             />
           ) : (
-            record.answerValue
+            <TruncatedText text={record.answerValue} maxLength={20} />
           )}
           {record.userComment ? (
             <Typography.Paragraph>
               <br />
-              <strong>Коментар:</strong>{' '}
-              <br />
+              <strong>Коментар:</strong> <br />
               <TruncatedText text={record.userComment} maxLength={12} />
             </Typography.Paragraph>
           ) : undefined}
@@ -283,10 +287,7 @@ const AnswersTable: React.FC<AnswerTableProps> = ({ answers, isLoading, paginati
 
       <div className="mb-2">
         <p>
-          Кількість відповідей: {' '}
-          <strong>
-          {pagination.total}
-          </strong>
+          Кількість відповідей: <strong>{pagination.total}</strong>
         </p>
       </div>
 
