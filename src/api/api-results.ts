@@ -8,8 +8,7 @@ export const resultsApi = apiSlice.injectEndpoints({
       query: () => ({
         url: 'results',
         method: 'POST'
-      }),
-      invalidatesTags: ['Results']
+      })
     }),
     getResults: builder.query<Pto.Results.ResultsPopulated, Pto.Results.ResultsListQuery>({
       query: (params) => {

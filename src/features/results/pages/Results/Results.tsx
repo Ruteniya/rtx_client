@@ -91,7 +91,7 @@ const Results = () => {
   const handleGenerateResults = async () => {
     await generateResults()
       .unwrap()
-      .then(() => message.success('Попередні результати згенеровано'))
+      .then(() => message.info('Запуск генерації результатів...'))
       .catch()
   }
 

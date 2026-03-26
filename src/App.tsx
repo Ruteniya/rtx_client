@@ -3,6 +3,7 @@ import { AppRoutes } from '@app/app-routes'
 import { lazy, Suspense } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Pto } from 'rtxtypes'
+import RealtimeListener from '@features/system/components/RealtimeListener/RealtimeListener'
 // import { ThemeProvider } from '@features/system/components'
 
 //system
@@ -127,6 +128,7 @@ function App() {
         </Flex>
       }
     >
+      <RealtimeListener />
       <RouterProvider router={router} />
     </Suspense>
     // </ThemeProvider>
